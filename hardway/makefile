@@ -1,10 +1,7 @@
-all: hello.o
+all: add.o
 
-hello.o: hello.obj
-	g++ -Wall hello.obj -o hello.o
-
-hello.obj: hello.cpp
-	g++ -Wall -c hello.cpp -o hello.obj
+add.o:
+	g++ -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++11 add.cpp -o add.o
 
 clean:
-	rm hello.o hello.obj
+	rm add.o

@@ -16,11 +16,14 @@ int main(int argc, char* argv[]){
     for(std::vector<uint32_t>::iterator it = v.begin(); it != v.end(); ++it){
         std::cout << *it << ", ";
     }
-    std::cout << "\n";
+    std::cout << std::endl;
 
     std::map<std::string, std::string> m;
-    for(uint32_t i=0; i< 500; i++){
-        m.insert(std::pair<std::string, std::string>(std::to_string(i), std::to_string(i * i)));
+    for(uint32_t i = 0; i < 500; i++){
+        m.insert(std::pair<std::string, std::string>(
+            std::to_string(i),
+            std::to_string(i * i)
+        ));
     }
 
     // find square for some integer saved as std::string
