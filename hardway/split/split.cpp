@@ -1,14 +1,6 @@
-#include <string>
-#include <iostream>
-#include <vector>
-#include <cmath>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string>
+#include "split.h"
 
 using namespace std;
-
-unique_ptr<vector<string>> split(const string& input, const char& separator);
 
 int main(){
     string input("some input");
