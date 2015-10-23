@@ -2,28 +2,23 @@
 
 using namespace std;
 
-namespace cpp {
+namespace nearest {
 
+    // to print Point to cout
+    std::ostream& operator<<(std::ostream &o, const nearest::Point& p) {
+        o << "(" << p.x << ", " << p.y << ", " << p.z << ")" << std::endl;
+        return o;
+    }
+
+    // defines sorting order for points
     struct ByDistance {
         const Point& origin;
-        const double distanceThreshold;
 
         bool operator()(const Point& lp, const Point& rp) {
-            double ld = dist(origin, lp);
-            double rd = dist(origin, rp);
-            if (ld <= distanceThreshold && ld <= distanceThreshold) {
-                return ld - rd;
-            }
-            if (ld > distanceThreshold && ld <= distanceThreshold) {
-                return -1;
-            }
-            if (ld <= distanceThreshold && ld > distanceThreshold) {
-                return 1;
-            }
-            return 0;
+            return dist(origin, lp) < dist(origin, rp);
         }
 
-        double dist(const Point& lp, const Point& rp){
+        static double dist(const Point& lp, const Point& rp){
             double xs = (lp.x - rp.x) * (lp.x - rp.x);
             double ys = (lp.y - rp.y) * (lp.y - rp.y);
             double zs = (lp.z - rp.z) * (lp.z - rp.z);
@@ -32,6 +27,10 @@ namespace cpp {
     };
 
     vector<Point> nearestN(const vector<Point>& points, int N) {
+        if (points.size() == 0) {
+            vector<Point> empty;
+            return empty;
+        }
         return nearestN(points, N, points[0], INFINITY);
     }
 
@@ -40,17 +39,21 @@ namespace cpp {
                            const Point& reference,
                            double distanceThreshold) {
 
+        vector<Point> temp;
+        temp.insert(temp.begin(), points.begin(), points.end());
 
-        vector<Point> temp(points);
-        ByDistance distance = {reference, distanceThreshold};
+        // filtering vector to remove all points far then distance from reference
+        temp.erase(remove_if(temp.begin(),
+                             temp.end(),
+                             [&reference, distanceThreshold](Point& p){ return ByDistance::dist(p, reference) > distanceThreshold; }),
+                   temp.end());
+
+        ByDistance distance = {reference};
         sort(temp.begin(), temp.end(), distance);
 
-        vector<Point> result(N);
-        copy_n(temp.begin(), N, result.begin());
+        auto sz = min(static_cast<int>(temp.size()), N);
+        vector<Point> result(sz);
+        copy_n(temp.begin(), sz, result.begin());
         return result;
     }
-}
-
-int main() {
-
 }
