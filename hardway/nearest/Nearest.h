@@ -1,9 +1,9 @@
 #pragma once
-
-#include <iostream>
 #include <algorithm>
 #include <cmath>
+#include <cassert>
 #include <vector>
+#include <iostream>
 
 namespace nearest {
 
@@ -14,6 +14,10 @@ struct Point {
 
     bool operator==(const Point& rhp) const {
         return x == rhp.x && y == rhp.y && z == rhp.z;
+    }
+
+    bool operator!=(const Point& rhp) const {
+        return x != rhp.x || y != rhp.y || z != rhp.z;
     }
 
     std::ostream& operator<<(std::ostream &o) const {

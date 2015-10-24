@@ -5,7 +5,7 @@ using namespace std;
 namespace nearest {
 
     vector<Point> nearestN(const vector<Point>& points, int N) {
-        if (points.empty()) {
+        if (points.empty() || N == 0) {
             return vector<Point>();
         }
         return nearestN(points, N, {0.0, 0.0, 0.0}, INFINITY);
@@ -16,6 +16,7 @@ namespace nearest {
                            const Point& reference,
                            double distanceThreshold) {
 
+        assert(distanceThreshold >= 0 && N >= 0);
         vector<Point> temp;
         temp.insert(temp.begin(), points.begin(), points.end());
 
