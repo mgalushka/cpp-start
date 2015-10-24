@@ -17,6 +17,9 @@ namespace nearest {
                            double distanceThreshold) {
 
         assert(distanceThreshold >= 0 && N >= 0);
+        if (points.empty() || N == 0) {
+            return vector<Point>();
+        }
         vector<Point> temp;
         temp.insert(temp.begin(), points.begin(), points.end());
 
