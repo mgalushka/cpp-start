@@ -8,13 +8,20 @@
 namespace nearest {
 
 struct Point {
-  double x;
-  double y;
-  double z;
+    double x;
+    double y;
+    double z;
 
-  bool operator==(const Point& rhp) {
-    return x == rhp.x && y == rhp.y && z == rhp.z;
-  }
+    bool operator==(const Point& rhp) {
+        return x == rhp.x && y == rhp.y && z == rhp.z;
+    }
+
+    double dist(const Point& other) const {
+        double xs = (x - other.x) * (x - other.x);
+        double ys = (y - other.y) * (y - other.y);
+        double zs = (z - other.z) * (z - other.z);
+        return sqrt(xs + ys + zs);
+    }
 
 };
 

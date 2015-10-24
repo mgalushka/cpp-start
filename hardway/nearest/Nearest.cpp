@@ -10,22 +10,6 @@ namespace nearest {
         return o;
     }
 
-    // defines sorting order for points
-    struct ByDistance {
-        const Point& origin;
-
-        bool operator()(const Point& lp, const Point& rp) {
-            return dist(origin, lp) < dist(origin, rp);
-        }
-
-        static double dist(const Point& lp, const Point& rp){
-            double xs = (lp.x - rp.x) * (lp.x - rp.x);
-            double ys = (lp.y - rp.y) * (lp.y - rp.y);
-            double zs = (lp.z - rp.z) * (lp.z - rp.z);
-            return sqrt(xs + ys + zs);
-        }
-    };
-
     vector<Point> nearestN(const vector<Point>& points, int N) {
         if (points.size() == 0) {
             vector<Point> empty;
@@ -45,11 +29,15 @@ namespace nearest {
         // filtering vector to remove all points far then distance from reference
         temp.erase(remove_if(temp.begin(),
                              temp.end(),
-                             [&reference, distanceThreshold](Point& p){ return ByDistance::dist(p, reference) > distanceThreshold; }),
-                   temp.end());
+                             [&reference, distanceThreshold](const Point& p){
+                                return reference.dist(p) > distanceThreshold;
+                             }),
+                    temp.end());
 
-        ByDistance distance = {reference};
-        sort(temp.begin(), temp.end(), distance);
+        sort(temp.begin(), temp.end(),
+            [&reference](const Point& p1, const Point& p2) {
+                return reference.dist(p1) < reference.dist(p2);
+            });
 
         auto sz = min(static_cast<int>(temp.size()), N);
         temp.resize(sz);
