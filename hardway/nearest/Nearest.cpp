@@ -15,7 +15,7 @@ namespace nearest {
             vector<Point> empty;
             return empty;
         }
-        return nearestN(points, N, points[0], INFINITY);
+        return nearestN(points, N, {0.0, 0.0, 0.0}, INFINITY);
     }
 
     vector<Point> nearestN(const vector<Point>& points,
