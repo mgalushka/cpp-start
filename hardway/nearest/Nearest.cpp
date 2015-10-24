@@ -4,16 +4,9 @@ using namespace std;
 
 namespace nearest {
 
-    // to print Point to cout
-    std::ostream& operator<<(std::ostream &o, const nearest::Point& p) {
-        o << "(" << p.x << ", " << p.y << ", " << p.z << ")" << std::endl;
-        return o;
-    }
-
     vector<Point> nearestN(const vector<Point>& points, int N) {
-        if (points.size() == 0) {
-            vector<Point> empty;
-            return empty;
+        if (points.empty()) {
+            return vector<Point>();
         }
         return nearestN(points, N, {0.0, 0.0, 0.0}, INFINITY);
     }
@@ -36,7 +29,7 @@ namespace nearest {
 
         sort(temp.begin(), temp.end(),
             [&reference](const Point& p1, const Point& p2) {
-                return reference.dist(p1) < reference.dist(p2);
+                return reference.dist_square(p1) < reference.dist_square(p2);
             });
 
         auto sz = min(static_cast<int>(temp.size()), N);

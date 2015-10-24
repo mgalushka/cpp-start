@@ -12,15 +12,23 @@ struct Point {
     double y;
     double z;
 
-    bool operator==(const Point& rhp) {
+    bool operator==(const Point& rhp) const {
         return x == rhp.x && y == rhp.y && z == rhp.z;
     }
 
-    double dist(const Point& other) const {
+    std::ostream& operator<<(std::ostream &o) const {
+        return o << "(" << x << ", " << y << ", " << z << ")\n";
+    }
+
+    double dist_square(const Point& other) const {
         double xs = (x - other.x) * (x - other.x);
         double ys = (y - other.y) * (y - other.y);
         double zs = (z - other.z) * (z - other.z);
-        return sqrt(xs + ys + zs);
+        return xs + ys + zs;
+    }
+
+    double dist(const Point& other) const {
+        return sqrt(dist_square(other));
     }
 
 };
