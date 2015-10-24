@@ -52,8 +52,7 @@ namespace nearest {
         sort(temp.begin(), temp.end(), distance);
 
         auto sz = min(static_cast<int>(temp.size()), N);
-        vector<Point> result(sz);
-        copy_n(temp.begin(), sz, result.begin());
-        return result;
+        temp.resize(sz);
+        return temp;
     }
 }
