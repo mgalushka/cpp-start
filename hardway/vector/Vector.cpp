@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <memory>
 #include "Vector.h"
 
@@ -8,6 +9,21 @@ namespace learning {
         std::allocator<T> alloc;
         begin_ = alloc.allocate(1);
         std::uninitialized_fill_n(begin_, 1, val);
+    }
+
+    template <class T>
+    Holder<T>::Holder(const Holder<T>& other) {
+        if (other.begin_ == nullptr) {
+            return;
+        }
+        std::allocator<T> alloc;
+        begin_ = alloc.allocate(1);
+        std::uninitialized_fill_n(begin_, 1, *other.begin_);
+    }
+
+    template <class T>
+    void Holder<T>::swap(Holder<T>& other) {
+        std::swap(begin_, other.begin_);
     }
 
     template <class T>

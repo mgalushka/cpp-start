@@ -4,9 +4,8 @@
 
 namespace learning {
 
-    /*
     template <class T>
-    class Vec {
+    class Vector {
 
     public:  
       typedef size_t size_type;  
@@ -14,14 +13,14 @@ namespace learning {
       typedef T* iterator;  
       typedef const T* const_iterator;  
       
-      // Construct an empty vector  
-      Vec();  
-        // Begin iterators, various const flavors 
+      // Construct an empty Vector
+      Vector();  
+        // Begin iterators, various const variants
         iterator begin() { return begin_; }
         const_iterator begin() const { return begin_; }
         const_iterator cbegin() const { return begin(); }
 
-        // Begin iterators, various const flavors
+        // Begin iterators, various const variants
         iterator end() { return end_; }
         const_iterator end() const { return end_; }
         const_iterator cend() const { return end(); }
@@ -35,7 +34,6 @@ namespace learning {
         T* end_;
         T* limit_;
     };
-    */
 
     template <class T>
     class Holder {
@@ -46,7 +44,9 @@ namespace learning {
         Holder(const T& val);
 
         // TODO: copy constructor
-        // Holder(const Vec& other);
+        Holder(const Holder& other);
+
+        void swap(Holder<T>& other);
 
         // destructor
         ~Holder();
