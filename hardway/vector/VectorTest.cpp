@@ -22,6 +22,8 @@ TEST(HolderDungling, holder) {
   // so we are fine - we cannot actually affect original pointer by doing anything with this one
   learning::Holder<int>::iterator it = h.begin();
   it++;
+
+  // value is still the same
   EXPECT_EQ(*h.begin(), 7);
 }
 
