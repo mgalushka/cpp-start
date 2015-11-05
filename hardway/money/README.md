@@ -11,3 +11,7 @@ I have a few tests passing for my class [here]|(https://gist.github.com/mgalushk
 
 
 **Money.cpp**
+
+
+Code review:
+http://codereview.stackexchange.com/questions/109821/simple-c-class-for-storing-and-manipulations-with-money

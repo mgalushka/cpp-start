@@ -1,6 +1,7 @@
 #ifndef CHANGE_MONEY_H_
 #define CHANGE_MONEY_H_
 
+#include <algorithm>
 #include <exception>
 #include <iostream>
 #include <string>
@@ -8,24 +9,28 @@
 namespace change {
     class Money {
     private:
-        int32_t whole;
+        int64_t whole;
         int8_t fraction;
 
-        void swap(Money other);
-
     public:
-        Money(const Money& other);
-        Money(const Money&& other);
-        Money(int32_t _whole, int8_t _fraction);
-        ~Money();
+        Money(const Money& other) noexcept = default;
+        Money(Money&& other) noexcept = default;
+        Money(int64_t _whole = 0, int8_t _fraction = 0) noexcept :
+            whole(_whole),
+            fraction(_fraction) {}
 
-        int32_t getWhole() const { return whole; }
-        int8_t getFraction() const { return fraction; }
+        ~Money() noexcept = default;
 
-        Money& operator=(const Money& other) {
-            if (&other != this) {
-                whole = other.whole;
-                fraction = other.fraction;
+        void swap(Money& other) {
+            using std::swap;
+            swap(whole, other.whole);
+            swap(fraction, other.fraction);
+        }
+
+        // by value because compiler will pick either copy/move depending on context here
+        Money& operator=(Money other) {
+            if (other != *this) {
+                other.swap(*this);
             }
             return *this;
         }
@@ -38,67 +43,60 @@ namespace change {
             return !(*this == other);
         }
 
-        bool operator>(const Money& other) const {
-            if (whole > other.whole) {
-                return true;
-            } else if (whole == other.whole) {
-                return fraction > other.fraction;
-            } else{
-                return false;
-            }
-        }
-
-        bool operator>=(const Money& other) const {
-            return (*this == other || *this > other);
-        }
-
         bool operator<(const Money& other) const {
-            return !(*this == other || *this > other);
+            return std::make_tuple(whole, fraction) <
+                   std::make_tuple(other.whole, other.fraction);
         }
 
         bool operator<=(const Money& other) const {
-            return (*this == other || *this < other);
+            return !(other < *this);
         }
 
-        Money operator+(Money& other) const {
-            Money result(0, 0);
-            int16_t sum = fraction + other.fraction;
-            int16_t newFrac = static_cast<int16_t>(sum) % 100;
-            int64_t carry = sum > 100 ? 1 : 0;
+        bool operator>(const Money& other) const {
+            return other < *this;
+        }
+
+        bool operator>=(const Money& other) const {
+            return !(*this < other);
+        }
+
+        Money operator+=(const Money &other) {
             // TODO: overflow check
-            result.whole =  whole + other.whole + carry;
-            result.fraction = static_cast<int8_t>(newFrac);
-            return result;
+            whole += other.whole;
+            fraction += other.fraction;
+
+            whole += fraction / 100;
+            fraction = fraction % 100;
+            return *this;
         }
 
-        Money operator+=(Money other) {
-            *this = *this + other;
+        Money operator+(const Money& other) const {
+            Money result(*this);
+            return result += other;
+        }
+
+        Money operator-=(const Money &other) {
+            // TODO: overflow check
+            whole -= other.whole;
+            fraction -= other.fraction;
+
+            whole += fraction < 0 ? -1 : 0;
+            fraction = fraction < 0 ? 100 + fraction : fraction;
             return *this;
         }
 
         Money operator-(const Money& other) const {
-            Money result(0, 0);
-            int8_t newFrac = (fraction - other.fraction) % 100;
-            int32_t carry = newFrac < 0 ? -1 : 0;
-            newFrac = newFrac < 0 ? 100 + newFrac : newFrac;
-            // TODO: overflow
-            result.whole = whole - other.whole + carry;
-            result.fraction = newFrac;
-            return result;
-        }
-
-        Money operator-=(Money other) {
-            *this = *this - other;
-            return *this;
+            Money result(*this);
+            return result -= other;
         }
 
         template <class T>
         Money operator*(T number) const {
             // TODO: overflow check
-            int64_t fracMult = static_cast<int64_t>(fraction) * number;
+            int64_t fracMult = fraction * number;
             int8_t newFrac =  static_cast<int8_t>(fracMult % 100);
             // TODO: overflow check
-            int32_t newWhole = whole * number + (fracMult / 100);
+            int64_t newWhole = whole * number + (fracMult / 100);
             Money tmp(newWhole, newFrac);
             return tmp;
         }
@@ -109,11 +107,11 @@ namespace change {
                 throw std::invalid_argument("Division by zero");
             }
             // TODO: overflow check
-            int64_t total = (100 * static_cast<int64_t>(whole)) + fraction;
+            int64_t total = (100 * whole) + fraction;
             int64_t result = total / number;
 
             int8_t newFrac = static_cast<int8_t>(result % 100);
-            int32_t newWhole = static_cast<int32_t>(result / 100);
+            int64_t newWhole = result / 100;
             Money tmp(newWhole, newFrac);
             return tmp;
         }
