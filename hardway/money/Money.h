@@ -27,11 +27,19 @@ namespace change {
             swap(fraction, other.fraction);
         }
 
-        // by value because compiler will pick either copy/move depending on context here
-        Money& operator=(Money other) {
-            if (other != *this) {
-                other.swap(*this);
+        // copy assignment
+        Money& operator=(const Money& other) {
+            if (&other != this) {
+                Money copy(other);
+                copy.swap(*this);
             }
+            return *this;
+        }
+
+        // move assignment
+        Money& operator=(Money&& other) noexcept {
+            Money copy(std::move(other));
+            copy.swap(*this);
             return *this;
         }
 
