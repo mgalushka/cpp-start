@@ -41,7 +41,7 @@ int main(int, char**) {
     convertToInt("0.000000");
 
 
-    folly::dynamic result = {folly::dynamic::object("","123456"), folly::dynamic::object("", "654321")};
+    folly::dynamic result = folly::dynamic::object("rows", {{"123456"}, {"67589"}});
 
     for (auto& row : result["rows"]) {
         auto s = folly::to<std::string>(row[0].asString());
