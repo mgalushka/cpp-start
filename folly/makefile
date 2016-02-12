@@ -12,7 +12,7 @@ GTEST_INCLUDE=${GTEST}/include
 all: FollyExperiment.o
 
 FollyExperiment.o:
-	${CC} -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++11 -stdlib=libc++ -I ${DEPS} -iquote ${DEPS} *.cpp -o FollyExperiment.o ${FOLLY_LIB} ${DOUBLE_CONVERSION_LIB}
+	${CC} -v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++11 -stdlib=libc++ -L${GLOG_LIB} -lglog -I ${DEPS} -iquote ${DEPS} *.cpp -o FollyExperiment.o ${GTEST}/make/gtest_main.a ${FOLLY_LIB} ${DOUBLE_CONVERSION_LIB}
 
 clean:
 	rm -f FollyExperiment.o

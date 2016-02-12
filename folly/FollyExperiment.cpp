@@ -15,6 +15,7 @@
 #include <mutex>
 
 #include <folly/Conv.h>
+#include <folly/dynamic.h>
 
 void convertToInt(const std::string& input) {
     try {
@@ -38,6 +39,14 @@ int main(int, char**) {
     convertToInt("");
     convertToInt("0x0");
     convertToInt("0.000000");
+
+
+    folly::dynamic result = {folly::dynamic::object("","123456"), folly::dynamic::object("", "654321")};
+
+    for (auto& row : result["rows"]) {
+        auto s = folly::to<std::string>(row[0].asString());
+        std::cout << s << std::endl;
+    }
 
     return 0;
 }
