@@ -1,5 +1,9 @@
 # Install packages
 
+brew install pkg-config
+brew install gstreamer
+brew install gtk
+
 install tremor:
 
 ```
