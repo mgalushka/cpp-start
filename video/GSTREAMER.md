@@ -32,3 +32,13 @@ Then - reinstall gst-plugins-base-1.6.3 plugins in standard way:
 ```
 ./configure && make && make install
 ```
+
+# Webcam
+
+How to gstrem video from webcam on mac:
+
+```
+gst-launch-1.0 wrappercamerabinsrc mode=2  ! video/x-raw, width=320, height=240 ! autovideosink
+gst-launch-1.0 wrappercamerabinsrc mode=2  ! video/x-raw, width=320, height=240 ! udpsink host=127.0.0.1 port=1234
+
+```
