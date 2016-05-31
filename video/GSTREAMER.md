@@ -1,5 +1,11 @@
 # Install packages
 
+plugins are taken from here:
+https://gstreamer.freedesktop.org/src/gst-plugins-base/
+https://gstreamer.freedesktop.org/src/gst-plugins-good/
+https://gstreamer.freedesktop.org/src/gst-plugins-bad/
+
+
 brew install pkg-config
 brew install gstreamer
 brew install gtk
