@@ -4,6 +4,11 @@ brew install pkg-config
 brew install gstreamer
 brew install gtk
 
+Check that this command is working:
+```
+pkg-config --cflags --libs gtk+-2.0 gstreamer-1.0
+```
+
 install tremor:
 
 ```
