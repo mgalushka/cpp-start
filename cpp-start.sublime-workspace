@@ -1,0 +1,956 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"url",
+				"url_path"
+			],
+			[
+				"get",
+				"get_full_url"
+			],
+			[
+				"shor",
+				"short_definition"
+			],
+			[
+				"CALYS",
+				"CALYPSO_METRICS"
+			],
+			[
+				"cal",
+				"calypso_table_alias"
+			],
+			[
+				"fom",
+				"formatted_datetime"
+			],
+			[
+				"re",
+				"read"
+			],
+			[
+				"calyp",
+				"calypso_table"
+			],
+			[
+				"lo",
+				"long"
+			],
+			[
+				"hive",
+				"hive_table"
+			],
+			[
+				"CALYSP",
+				"CALYPSO_SCHEMA"
+			],
+			[
+				"cre",
+				"create_calypso_sum_imp_table"
+			],
+			[
+				"from",
+				"from_list"
+			],
+			[
+				"mu",
+				"murmur2_jar"
+			],
+			[
+				"S",
+				"START_DATETIME"
+			],
+			[
+				"DATE",
+				"DATETIME_HOUR"
+			],
+			[
+				"NA",
+				"CALYPSO_NAMESPACE"
+			],
+			[
+				"compute",
+				"compute_fb_hive_stats"
+			],
+			[
+				"CALY",
+				"CALYPSO_SCHEMA"
+			],
+			[
+				"info",
+				"info_message"
+			],
+			[
+				"sptr",
+				"sprintf"
+			],
+			[
+				"excep",
+				"exception"
+			],
+			[
+				"date",
+				"datetime_id"
+			],
+			[
+				"place",
+				"place_visibility"
+			],
+			[
+				"source",
+				"source_name"
+			],
+			[
+				"tile",
+				"tile_level"
+			],
+			[
+				"me",
+				"merge_python_action"
+			],
+			[
+				"tr",
+				"transformer"
+			],
+			[
+				"load_me",
+				"load_menus_and_sections_fields"
+			],
+			[
+				"cas",
+				"casinos-by-state"
+			],
+			[
+				"sig",
+				"sign_url"
+			],
+			[
+				"ur",
+				"urlencode"
+			],
+			[
+				"page",
+				"page_fbid"
+			],
+			[
+				"sideload_place_type",
+				"sideload_place_type_partition"
+			],
+			[
+				"de",
+				"description"
+			],
+			[
+				"Hi",
+				"Hive2FileOperator"
+			],
+			[
+				"sideload",
+				"sideload_table"
+			],
+			[
+				"lon",
+				"long_null"
+			],
+			[
+				"la",
+				"lat_null"
+			],
+			[
+				"for",
+				"format"
+			],
+			[
+				"table",
+				"table_profile_field"
+			],
+			[
+				"wait_",
+				"wait_entity_activity_stats"
+			],
+			[
+				"wai",
+				"wait_entity_metadata_completeness"
+			],
+			[
+				"p0",
+				"p0_filters"
+			],
+			[
+				"json_",
+				"json_encoded_data_to_export"
+			],
+			[
+				"batc",
+				"batch_id"
+			],
+			[
+				"Du",
+				"dunkin_donuts"
+			],
+			[
+				"open",
+				"openrefine"
+			],
+			[
+				"bash_",
+				"bash_script_arguments"
+			],
+			[
+				"__",
+				"__validate_input"
+			],
+			[
+				"full",
+				"full_path"
+			],
+			[
+				"loca",
+				"locale"
+			],
+			[
+				"colu",
+				"column_name"
+			],
+			[
+				"pa",
+				"page_fbid"
+			],
+			[
+				"TRANSFOR",
+				"TRANSFORM_OUTPUT"
+			],
+			[
+				"artist_",
+				"artist_alias"
+			],
+			[
+				"ARRA",
+				"ARRAY_WRAP"
+			],
+			[
+				"TRAN",
+				"TRANSFORM_OUTPUT"
+			],
+			[
+				"obje",
+				"object_id"
+			],
+			[
+				"coun",
+				"count_double"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "hardway/kostya.cpp",
+			"settings":
+			{
+				"buffer_size": 215,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 207.0,
+		"last_filter": "Project",
+		"selected_items":
+		[
+			[
+				"Project",
+				"Limebox: Setup New Project"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"User se",
+				"Limebox: User Settings"
+			],
+			[
+				"sett",
+				"Preferences: Settings - User"
+			],
+			[
+				"Settings",
+				"Preferences: Settings - User"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"open pro",
+				"Limebox: Setup New Project"
+			],
+			[
+				"Packa",
+				"Preferences: Browse Packages"
+			],
+			[
+				"prefere",
+				"Preferences: Settings - Default"
+			],
+			[
+				"prefer",
+				"Preferences: Settings - Default"
+			],
+			[
+				"Prefer",
+				"Preferences: Settings - User"
+			],
+			[
+				"setti",
+				"Preferences: Settings - Default"
+			],
+			[
+				"project",
+				"Limebox: Setup New Project"
+			],
+			[
+				"uni",
+				"Permute Lines: Unique"
+			],
+			[
+				"setting",
+				"Preferences: Settings - User"
+			],
+			[
+				"open",
+				"Limebox: Open File List"
+			],
+			[
+				"open file",
+				"Limebox: Open File Path"
+			],
+			[
+				"open fi",
+				"View: Toggle Open Files in Side Bar"
+			],
+			[
+				"d",
+				"Limebox: Open File Path Directly"
+			],
+			[
+				"lime",
+				"Limebox: Open File List"
+			],
+			[
+				"LIME",
+				"Limebox: Setup New Project"
+			],
+			[
+				"OPEN",
+				"Limebox: Open File Path"
+			],
+			[
+				"lim",
+				"Limebox: Setup New Project"
+			],
+			[
+				"Lime",
+				"Limebox: Setup New Project"
+			],
+			[
+				"Hack",
+				"Hack: Complete"
+			],
+			[
+				"Install",
+				"Package Control: Install Package"
+			],
+			[
+				"Add re",
+				"Package Control: Add Repository"
+			],
+			[
+				"",
+				"Preferences: Facelime Settings – User"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/mgalushka/Documents/dwproxy_testing.bash",
+		"/Users/mgalushka/projects/lightbot-www/www/svc/login_controller.php",
+		"/Users/mgalushka/projects/lightbot-www/www/login.php",
+		"/Users/mgalushka/projects/lightbot-solr/README.md",
+		"/Users/mgalushka/projects/lightbot-solr/READABILITY.md",
+		"/Users/mgalushka/projects/lightbot-solr/db/DATABASE.md",
+		"/Users/mgalushka/projects/lightbot-solr/rss-bootstrap/keywords/load_tweets/__init__.py",
+		"/Users/mgalushka/projects/lightbot-solr/SOLR.md",
+		"/Users/mgalushka/projects/lightbot-solr/rss-bootstrap/keywords/__init__.py",
+		"/Users/mgalushka/projects/lightbot-solr/BOOTSTRAPPING.md",
+		"/Users/mgalushka/projects/lightbot-solr/db/article_urls.sql",
+		"/Users/mgalushka/projects/lightbot-solr/MACHINE_LEARNING.md",
+		"/Users/mgalushka/projects/lightbot-solr/db/BOOTSTRAP_DB.md",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/data_consistency/consistency_utils.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/utils.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/data_consistency/compute_fb_hive_stats.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/data_consistency/fb_hive_vertica_compare.py",
+		"/Users/mgalushka/Documents/calypso_recovery.sql",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/data_consistency/fb_hive_calypso_compare.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/liverail/hive2calypso/recovery/common.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/liverail/hive2calypso/recovery/calypso_loader.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/liverail/hive2calypso/recovery/sum_imp.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/liverail/hive2calypso/recovery/compute_hive_for_recovery.py",
+		"/Users/mgalushka/Documents/liverail_imp.puma.sql",
+		"/Users/mgalushka/Documents/vertica.bash",
+		"/Users/mgalushka/Documents/dimension_service.bash",
+		"/Users/mgalushka/Documents/calypso_data_loss.sql",
+		"/Users/mgalushka/Documents/presto_experiments/orc_py/orc_proto_pb2.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/liverail/hive2calypso/recovery/debug/export_for_compare.py",
+		"/Users/mgalushka/Documents/liverail_dashboards.bash",
+		"/Users/mgalushka/Documents/move_to_per_host_config.bash",
+		"/Users/mgalushka/Documents/liverail_alarms.bash",
+		"/Users/mgalushka/Documents/presto_experiments/orc_py/read_orc.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/liverail/hive2calypso/recovery/sum_inv.py",
+		"/Users/mgalushka/Documents/call_stats_services.php",
+		"/Users/mgalushka/Documents/dashboard.sql",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/common/liverail/metric_ids/constants.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/liverail/hive2calypso/recovery/sum_imp_error.py",
+		"/Users/mgalushka/Documents/liverail_error_reports.bash",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/liverail/hive2calypso/recovery/export_for_compare.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/liverail/hive2calypso/recovery/dim.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/liverail/hive2calypso/recovery/utils.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/scripts/entities/castlehack/signdiff.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/liverail/hive2vertica/recovery/compute_hive_for_recovery.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/data_consistency/fb_hive_hourly_compare.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/common_macros.py",
+		"/Users/mgalushka/Documents/calypso_error_code.bash",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/data_consistency/compute_fb_calypso_stats.py",
+		"/Users/mgalushka/exported_rows.2016-04-10_all_batch_ids.",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/entities/sponge/singleplatform/jython/place_jython.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/entities/sponge/singleplatform/singleplatform.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/common/sponge/data_import/handlers/spongepythonhandler.py",
+		"/Users/mgalushka/Documents/create-cdb-tunnel.sh",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/liverail/experimental/export_calypso_rows.py",
+		"/Users/mgalushka/Documents/mounts.bash",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/hive_hourly/utils.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/data_consistency/calypso_query_rows.py",
+		"/Users/mgalushka/Documents/calypso_migration_post",
+		"/Users/mgalushka/Documents/propagate_smc_properties.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks_adhoc/entities/sponge/delete_invalid_hashout_mediators.py",
+		"/Users/mgalushka/Documents/create_summary_connection.sql",
+		"/Users/mgalushka/imp_data_size.txt.csv",
+		"/Users/mgalushka/calypso_results_csv.csv",
+		"/Users/mgalushka/Documents/calypso.bash",
+		"/Users/mgalushka/Documents/liverail_counters.bash",
+		"/Users/mgalushka/Documents/tuning_joins___dim_country_v4.sql",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/data_consistency/compute_fb_vertica_stats.py",
+		"/Users/mgalushka/Documents/vertica_lagging.txt",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/untitled.py",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/data_consistency/SELECT",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/data_consistency/fb_vertica_cluster_compare.py",
+		"/Users/mgalushka/Documents/liverail_top_1000_entities.txt",
+		"/Users/mgalushka/Documents/dataswarm.sublime-project",
+		"/Users/mgalushka/Documents/hotcount_transfer_functionality.bash",
+		"/Users/mgalushka/Documents/hive_data_loading_issues.md",
+		"/Users/mgalushka/Documents/enforcers_gentests_unit.py",
+		"/Users/mgalushka/Documents/# data is not loaded to Hive.md",
+		"/Users/mgalushka/projects/lightbot-www/www/header.php",
+		"/Users/mgalushka/projects/lightbot-solr/db/users.sql",
+		"/Users/mgalushka/projects/lightbot-solr/db/rss_urls.sql",
+		"/Users/mgalushka/projects/lightbot-solr/db/article_urls",
+		"/Users/mgalushka/projects/lightbot-www/www/search.php",
+		"/Users/mgalushka/projects/lightbot-www/www/monitor.php",
+		"/Users/mgalushka/projects/lightbot-www/www/svc/data_controller.php",
+		"/Users/mgalushka/projects/lightbot-www/www/svc/solr_client.php",
+		"/Users/mgalushka/projects/lightbot-solr/ZOOKEEPER.md",
+		"/Users/mgalushka/projects/lightbot-www/www/css/custom.css",
+		"/Users/mgalushka/projects/lightbot-www/www/js/lib/tipuesearch.js",
+		"/Users/mgalushka/projects/lightbot-www/www/js/lib/tipuesearch_set.js",
+		"/Users/mgalushka/projects/lightbot-www/APACHE.md",
+		"/Users/mgalushka/projects/lightbot-solr/solr-schema/articles/schema.xml",
+		"/Users/mgalushka/projects/lightbot-www/www/footer.php",
+		"/Users/mgalushka/projects/lightbot-www/www/search.html",
+		"/Users/mgalushka/projects/lightbot-www/www/index.html",
+		"/Users/mgalushka/projects/lightbot-solr/rss-feed/infinite_reader.py",
+		"/Users/mgalushka/projects/lightbot-solr/READABILIRY.md",
+		"/Users/mgalushka/projects/lightbot-solr/.gitignore",
+		"/Users/mgalushka/projects/lightbot-solr/example_document.json",
+		"/Users/mgalushka/projects/lightbot-solr/solr-schema/articles/solrconfig.xml",
+		"/Users/mgalushka/projects/lightbot-solr/solr-schema/articles/managed-schema",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/vertica/integrity.py",
+		"/Users/mgalushka/order_line.sql.sql",
+		"/Users/mgalushka/Documents/CapConImpNetTest.cpp",
+		"/Users/mgalushka/Documents/consts_data.py",
+		"/Users/mgalushka/Documents/chains_imports.bash",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/liverail/hive_hourly/populate_hourly_tables.py",
+		"/Users/mgalushka/order.sql.sql",
+		"/Users/mgalushka/Documents/consts_data.out",
+		"/Users/mgalushka/Documents/consts_data2.out",
+		"/Users/mgalushka/Documents/consts_data",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/entities/sponge/examples/test_array_import/test_array_import.py",
+		"/Users/mgalushka/Documents/configerator.sublime-project",
+		"/Users/mgalushka/.limebox/c9f79bd8fa9e88cc852a232b96c6ad8d9c7725e5e273050ea74999d672ae1c1a/tasks/messages/growth/reg/dashboards/queries.py",
+		"/Users/mgalushka/Documents/move_to_per_host_config.txt",
+		"/Users/mgalushka/projects/cpp-start/hardway/temp_copy/README.md",
+		"/Users/mgalushka/projects/cpp-start/hardway/temp_copy/TempCopyTest.cpp",
+		"/Users/mgalushka/projects/cpp-start/hardway/temp_copy/makefile",
+		"/Users/mgalushka/Documents/PrintAllHostsInTier.cpp",
+		"/Users/mgalushka/projects/cpp-start/hardway/money/Money.cpp",
+		"/Users/mgalushka/projects/cpp-start/hardway/vector/Vector.cpp",
+		"/Users/mgalushka/projects/cpp-start/hardway/temp_copy/MoneyTest.o",
+		"/Users/mgalushka/projects/cpp-start/hardway/temp_copy/Money.h",
+		"/Users/mgalushka/projects/cpp-start/hardway/temp_copy/Money.cpp",
+		"/Users/mgalushka/projects/cpp-start/hardway/temp_copy/ChangeTest.cpp",
+		"/Users/mgalushka/projects/cpp-start/hardway/temp_copy/Change.h",
+		"/Users/mgalushka/projects/cpp-start/hardway/temp_copy/Change.cpp",
+		"/Users/mgalushka/projects/cpp-start/hardway/vector/Vector.h",
+		"/Users/mgalushka/projects/cpp-start/hardway/money/Money.h"
+	],
+	"find":
+	{
+		"height": 23.0
+	},
+	"find_in_files":
+	{
+		"height": 106.0,
+		"where_history":
+		[
+			"",
+			"2014",
+			"current",
+			"splitting_log_timings.txt",
+			"simple_utf8.tsv",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"'",
+			"json",
+			"<<",
+			">>>>",
+			"login\\(",
+			"login(",
+			"\";\n",
+			"\\n",
+			"\\s+.*\\n",
+			"            ),",
+			"\\n",
+			" ",
+			":00:00",
+			"\\n",
+			" \\)",
+			"\\( ",
+			"\\n\\n",
+			"\"",
+			"LRConsta",
+			"compute_hive_imp_pub_stats",
+			"batch_id",
+			"\\s+",
+			"port",
+			"\"",
+			"\\\\",
+			"'false'",
+			"'true'",
+			"False",
+			"True",
+			"(\\w+)",
+			"INSTR",
+			"(\\w+)",
+			"\\s.*\\n",
+			"\\s.*",
+			"=>",
+			"\\n",
+			"n\\",
+			"sum_inv_pub",
+			"sum_inv_pub_v4",
+			"GUI",
+			"fromLive",
+			"pres",
+			"\"",
+			"\\n",
+			"sum_imp",
+			"#",
+			"№",
+			"#",
+			"sum_imp",
+			"format_columns_list",
+			"format_columns_cast_list",
+			"EXPORT_QUERY",
+			"\"imp",
+			"\"imp\"",
+			"'imp'",
+			"\\\\t",
+			"\\),",
+			",\\n",
+			"\\n",
+			"\\(",
+			"^\\s+.*\\n",
+			",.*",
+			",\\n",
+			" ",
+			"fact_columns",
+			"cliutils",
+			"cliutils.local_changes",
+			"cliutils.is_local_clean",
+			"CalypsoDimsQueryGenerator",
+			",\\n",
+			"\\n",
+			" ",
+			",",
+			"\\n",
+			" ",
+			",",
+			"\\n",
+			",",
+			"\\n",
+			"false",
+			"False",
+			"FALSE",
+			"COALESCE",
+			"(\\w+)",
+			"\\).*",
+			"sum\\(",
+			"CALYPSO_ROWS_FILTER",
+			"third",
+			"token",
+			"thousandseparator",
+			"token",
+			"request",
+			"portfolio",
+			"portforlio",
+			"reques",
+			"request_toke",
+			"dimen",
+			"dimension",
+			"dimensions",
+			" #",
+			"age_bracket_idorder_id",
+			"\"\\n",
+			":\"",
+			"\\n",
+			"\\s+\\|.*",
+			"\\n",
+			"\\s+\\|.*",
+			"FORMATTED_DATETIME",
+			"<> ",
+			"\\n",
+			",",
+			" $",
+			"\"",
+			"_operators",
+			"CALYPSO_DELETE_HOST",
+			"CALYPSO_LOAD_HOST",
+			"CALYPSO_HOST",
+			"CALYPSO_USER",
+			"task",
+			"print",
+			"pri",
+			"id",
+			" DOUBLE",
+			" STRING",
+			" BIGINT",
+			"netw",
+			"\\n",
+			",$"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			",\\n",
+			",",
+			"\\n",
+			" ",
+			"-",
+			":00",
+			" ",
+			"",
+			"\\n",
+			"",
+			"\\n",
+			"",
+			"0",
+			"1",
+			"'false'",
+			"'true'",
+			"'\\1', IF(INSTR(query, '\\1') > 0, True, False),",
+			"'\\1', IF(STRPOS(\\1) > 0, True, False),",
+			"\\n",
+			"",
+			"\\n\\t=>",
+			" ",
+			"",
+			" ",
+			"\\n#",
+			"#\\n",
+			",),",
+			"),\\n(",
+			")\\n(",
+			"",
+			",",
+			"'),\\n('",
+			"', '",
+			"),\\n(",
+			"'),\\n('",
+			"(',\\n'),",
+			"',\\n'",
+			"',\\n",
+			"', '",
+			"",
+			",\\n",
+			"'\\n'",
+			"', '",
+			"",
+			"', '",
+			"",
+			" ",
+			"SUM(\\1) as \\1,",
+			"",
+			"\\n#",
+			" -d ",
+			"=",
+			",\\n",
+			"",
+			",\\n",
+			"",
+			"\\naosc allow prestodb.liverail ",
+			"\\n",
+			"",
+			"__operators",
+			"CALYPSO_DELETE_URL",
+			"CALYPSO_LOAD_URL",
+			"CALYPSO_LOAD_HOST",
+			"",
+			",\\n",
+			")\\n(",
+			"\"",
+			", \"",
+			"\"\\n, \"",
+			"",
+			" BIGINT,",
+			" STRING,",
+			"",
+			"\\n",
+			"third_party_id",
+			"main_order_id",
+			"main_order_line_id",
+			"campaign_id",
+			"age",
+			" AS STRING), '\\\\x01',\\nCAST(",
+			" AS STRING), '\\x01',\\nCAST(",
+			"",
+			"\\\\x01",
+			"\\x01",
+			" AS STRING), '\\x01',\\nCAST(",
+			"",
+			"\\n",
+			"",
+			"COALESCE(COUNT_IF(STRPOS(query, '\\1') > 0), 0) as \\1,",
+			"COUNT_IF(STRPOS(query, '\\1') > 0) as \\1,",
+			"COUNT_IF(STRPOS(query, '\\1') > 0) as \\1",
+			"",
+			"\\n",
+			"\\t",
+			"",
+			"\\t",
+			"\\n",
+			"",
+			"\\n",
+			"",
+			"\\1,",
+			"\\1 ",
+			"\\n",
+			"",
+			",\\n",
+			"",
+			",",
+			" ",
+			" --publishers=",
+			",",
+			" ",
+			"",
+			"git",
+			"",
+			",\\n",
+			"\\n",
+			"",
+			",",
+			"",
+			",",
+			"",
+			" ",
+			"",
+			", ",
+			",",
+			"",
+			"sum(\\1) as \\1,",
+			"sum(\\1) as sum_\\1,"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": false
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "hardway/kostya.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 215,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								215,
+								215
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 100.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "cpp-start.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"utiltest",
+				"flib/core/db/__tests__/UdbUtilsTestCase.php"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/Documents/configerator.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 194.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
