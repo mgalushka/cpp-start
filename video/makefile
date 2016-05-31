@@ -5,7 +5,7 @@ CC=gcc
 all: internet_video.o
 
 internet_video.o:
-	${CC} -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++11 -stdlib=libc++ `pkg-config --cflags --libs gtk+-2.0 gstreamer-1.0` internet_video.c -o internet_video.o
+	${CC} -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -stdlib=libc++ `pkg-config --cflags --libs gtk+-2.0 gstreamer-1.0` internet_video.c -o internet_video.o
 
 clean:
 	rm internet_video.o

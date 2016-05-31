@@ -1,3 +1,5 @@
+// to launch from command line:
+// gst-launch-1.0 playbin uri=http://docs.gstreamer.com/media/sintel_trailer-480p.webm
 #include <gst/gst.h>
 #include <string.h>
    
@@ -68,7 +70,7 @@ int main(int argc, char *argv[]) {
   memset (&data, 0, sizeof (data));
    
   /* Build the pipeline */
-  pipeline = gst_parse_launch ("playbin2 uri=http://docs.gstreamer.com/media/sintel_trailer-480p.webm", NULL);
+  pipeline = gst_parse_launch ("playbin uri=http://docs.gstreamer.com/media/sintel_trailer-480p.webm", NULL);
   bus = gst_element_get_bus (pipeline);
    
   /* Start playing */
