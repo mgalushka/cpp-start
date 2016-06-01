@@ -32,13 +32,36 @@ Then - reinstall gst-plugins-base-1.6.3 plugins in standard way:
 ```
 ./configure && make && make install
 ```
+# Debugging
+
+Add `--gst-debug-level=4` flag to gstreamer application
 
 # Webcam
 
-How to gstrem video from webcam on mac:
-
+How to strem video from webcam on mac:
 ```
 gst-launch-1.0 wrappercamerabinsrc mode=2  ! video/x-raw, width=320, height=240 ! autovideosink
 gst-launch-1.0 wrappercamerabinsrc mode=2  ! video/x-raw, width=320, height=240 ! udpsink host=127.0.0.1 port=1234
+```
 
+input video from test
+```
+gst-launch-1.0 -v videotestsrc ! videoconvert ! avenc_h263p ! rtph263ppay ! udpsink host=127.0.0.1 port=5001
+```
+
+input video from webcam
+```
+gst-launch-1.0 -v wrappercamerabinsrc mode=2  ! video/x-raw, width=320, height=240 ! videoconvert ! avenc_h263p ! rtph263ppay ! udpsink host=127.0.0.1 port=5001
+```
+
+You need to copy `caps` from input and pass on receiver:
+
+```
+gst-launch-1.0 -v udpsrc address=127.0.0.1 port=5001 caps="application/x-rtp\,\ media\=\(string\)video\,\ clock-rate\=\(int\)90000\,\ encoding-name\=\(string\)H263-1998\,\ payload\=\(int\)96\,\ ssrc\=\(uint\)870888106\,\ timestamp-offset\=\(uint\)3238251667\,\ seqnum-offset\=\(uint\)8585" ! rtph263pdepay ! avdec_h263 ! autovideosink
+```
+
+
+Watch video from internet:
+```
+gst-launch-1.0 playbin uri=http://docs.gstreamer.com/media/sintel_trailer-480p.webm
 ```
