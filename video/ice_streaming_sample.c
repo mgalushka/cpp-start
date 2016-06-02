@@ -181,26 +181,12 @@ int main(int argc, char *argv[]) {
 
    
   /* Free resources */
+  g_main_loop_unref(gloop);
   gst_object_unref (bus);
   gst_element_set_state (pipeline, GST_STATE_NULL);
   gst_object_unref (pipeline);
 
-  /*
-  gloop = g_main_loop_new(NULL, FALSE);
-
-  // Run the mainloop and the example thread
-  exit_thread = FALSE;
-  gexamplethread = g_thread_new("example thread", &example_thread, NULL);
-  g_main_loop_run (gloop);
-  exit_thread = TRUE;
-
-  g_thread_join (gexamplethread);
-  g_main_loop_unref(gloop);
-
   return EXIT_SUCCESS;
-  */
-
-  return 0;
 }
 
 static void *
