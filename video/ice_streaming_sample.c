@@ -170,7 +170,14 @@ int main(int argc, char *argv[]) {
 
   gst_bus_add_signal_watch (bus);
   g_signal_connect (bus, "message", G_CALLBACK (cb_message), &data);
+
+  // Run the mainloop and the example thread
+  exit_thread = FALSE;
+  gexamplethread = g_thread_new("example thread", &example_thread, NULL);
   g_main_loop_run (gloop);
+  exit_thread = TRUE;
+
+  g_thread_join (gexamplethread);
 
    
   /* Free resources */
@@ -178,6 +185,20 @@ int main(int argc, char *argv[]) {
   gst_element_set_state (pipeline, GST_STATE_NULL);
   gst_object_unref (pipeline);
 
+  /*
+  gloop = g_main_loop_new(NULL, FALSE);
+
+  // Run the mainloop and the example thread
+  exit_thread = FALSE;
+  gexamplethread = g_thread_new("example thread", &example_thread, NULL);
+  g_main_loop_run (gloop);
+  exit_thread = TRUE;
+
+  g_thread_join (gexamplethread);
+  g_main_loop_unref(gloop);
+
+  return EXIT_SUCCESS;
+  */
 
   return 0;
 }
