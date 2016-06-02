@@ -298,7 +298,9 @@ end:
   return NULL;
 }
 
-
+/*
+ * Callback to be called when piepile receives message/data is updates
+ */
 static void cb_message (GstBus *bus, GstMessage *msg, CustomData *data) {   
   switch (GST_MESSAGE_TYPE (msg)) {
     case GST_MESSAGE_ERROR: {
