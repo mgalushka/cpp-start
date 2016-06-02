@@ -38,53 +38,8 @@ static void cb_nice_recv(NiceAgent *agent, guint stream_id, guint component_id,
 
 static void * example_thread(void *data);
 
+static void cb_message (GstBus *bus, GstMessage *msg, CustomData *data);
 
-static void cb_message (GstBus *bus, GstMessage *msg, CustomData *data) {
-   
-  switch (GST_MESSAGE_TYPE (msg)) {
-    case GST_MESSAGE_ERROR: {
-      GError *err;
-      gchar *debug;
-       
-      gst_message_parse_error (msg, &err, &debug);
-      g_print ("Error: %s\n", err->message);
-      g_error_free (err);
-      g_free (debug);
-       
-      gst_element_set_state (data->pipeline, GST_STATE_READY);
-      g_main_loop_quit (gloop);
-      break;
-    }
-    case GST_MESSAGE_EOS:
-      /* end-of-stream */
-      gst_element_set_state (data->pipeline, GST_STATE_READY);
-      g_main_loop_quit (gloop);
-      break;
-    case GST_MESSAGE_BUFFERING: {
-      gint percent = 0;
-       
-      /* If the stream is live, we do not care about buffering. */
-      if (data->is_live) break;
-       
-      gst_message_parse_buffering (msg, &percent);
-      g_print ("Buffering (%3d%%)\r", percent);
-      /* Wait until buffering is complete before start/resume playing */
-      if (percent < 100)
-        gst_element_set_state (data->pipeline, GST_STATE_PAUSED);
-      else
-        gst_element_set_state (data->pipeline, GST_STATE_PLAYING);
-      break;
-    }
-    case GST_MESSAGE_CLOCK_LOST:
-      /* Get a new clock */
-      gst_element_set_state (data->pipeline, GST_STATE_PAUSED);
-      gst_element_set_state (data->pipeline, GST_STATE_PLAYING);
-      break;
-    default:
-      /* Unhandled message */
-      break;
-    }
-}
 
 int main(int argc, char *argv[]) {
   GstMessage *msg;
@@ -137,6 +92,9 @@ int main(int argc, char *argv[]) {
   return EXIT_SUCCESS;
 }
 
+/**
+ * Performs ICE negotiation and starts gstreamer pipeline
+ */
 static void * example_thread(void *data) {
   NiceAgent *agent;
   GIOChannel* io_stdin;
@@ -191,17 +149,21 @@ static void * example_thread(void *data) {
     NULL);
 
   // Start gathering local candidates
-  if (!nice_agent_gather_candidates(agent, stream_id))
+  if (!nice_agent_gather_candidates(agent, stream_id)) {
     g_error("Failed to start candidate gathering");
+  }
 
   g_debug("waiting for candidate-gathering-done signal...");
 
   g_mutex_lock(&gather_mutex);
-  while (!exit_thread && !candidate_gathering_done)
+  while (!exit_thread && !candidate_gathering_done) {
     g_cond_wait(&gather_cond, &gather_mutex);
+  }
+
   g_mutex_unlock(&gather_mutex);
-  if (exit_thread)
+  if (exit_thread) {
     goto end;
+  }
 
   // Candidate gathering is done. Send our local candidates on stdout
   printf("Copy this line to remote client:\n");
@@ -215,6 +177,7 @@ static void * example_thread(void *data) {
   printf("Enter remote data (single line, no wrapping):\n");
   printf("> ");
   fflush (stdout);
+
   while (!exit_thread) {
     GIOStatus s = g_io_channel_read_line (io_stdin, &line, NULL, NULL, NULL);
     if (s == G_IO_STATUS_NORMAL) {
@@ -241,11 +204,14 @@ static void * example_thread(void *data) {
 
   g_debug("waiting for state READY or FAILED signal...");
   g_mutex_lock(&negotiate_mutex);
-  while (!exit_thread && !negotiation_done)
+  while (!exit_thread && !negotiation_done) {
     g_cond_wait(&negotiate_cond, &negotiate_mutex);
+  }
+
   g_mutex_unlock(&negotiate_mutex);
-  if (exit_thread)
+  if (exit_thread) {
     goto end;
+  }
 
   // Now create pipelines depending on who is sending and who is receiving video stream
   printf("\nNegotiations complete:\n");
@@ -332,10 +298,61 @@ end:
   return NULL;
 }
 
-static void
-cb_candidate_gathering_done(NiceAgent *agent, guint stream_id,
-    gpointer data)
-{
+
+static void cb_message (GstBus *bus, GstMessage *msg, CustomData *data) {   
+  switch (GST_MESSAGE_TYPE (msg)) {
+    case GST_MESSAGE_ERROR: {
+      GError *err;
+      gchar *debug;
+       
+      gst_message_parse_error (msg, &err, &debug);
+      g_print ("Error: %s\n", err->message);
+      g_error_free (err);
+      g_free (debug);
+       
+      gst_element_set_state (data->pipeline, GST_STATE_READY);
+      g_main_loop_quit (gloop);
+      break;
+    }
+    case GST_MESSAGE_EOS:
+      /* end-of-stream */
+      gst_element_set_state (data->pipeline, GST_STATE_READY);
+      g_main_loop_quit (gloop);
+      break;
+    case GST_MESSAGE_BUFFERING: {
+      gint percent = 0;
+       
+      /* If the stream is live, we do not care about buffering. */
+      if (data->is_live) break;
+       
+      gst_message_parse_buffering (msg, &percent);
+      g_print ("Buffering (%3d%%)\r", percent);
+      /* Wait until buffering is complete before start/resume playing */
+      if (percent < 100)
+        gst_element_set_state (data->pipeline, GST_STATE_PAUSED);
+      else
+        gst_element_set_state (data->pipeline, GST_STATE_PLAYING);
+      break;
+    }
+    case GST_MESSAGE_CLOCK_LOST:
+      /* Get a new clock */
+      gst_element_set_state (data->pipeline, GST_STATE_PAUSED);
+      gst_element_set_state (data->pipeline, GST_STATE_PLAYING);
+      break;
+    default:
+      /* Unhandled message */
+      break;
+    }
+}
+
+/*
+ * Callback to be called when candidate gathering was completed
+ */
+static void cb_candidate_gathering_done(
+  NiceAgent *agent,
+  guint stream_id,
+  gpointer data) {
+
   g_debug("SIGNAL candidate gathering done\n");
 
   g_mutex_lock(&gather_mutex);
@@ -344,11 +361,16 @@ cb_candidate_gathering_done(NiceAgent *agent, guint stream_id,
   g_mutex_unlock(&gather_mutex);
 }
 
-static void
-cb_component_state_changed(NiceAgent *agent, guint stream_id,
-    guint component_id, guint state,
-    gpointer data)
-{
+/*
+ * Callback to be called when state is changed
+ */
+static void cb_component_state_changed(
+  NiceAgent *agent,
+  guint stream_id,
+  guint component_id,
+  guint state,
+  gpointer data) {
+
   g_debug("SIGNAL: state changed %d %d %s[%d]\n",
       stream_id, component_id, state_name[state], state);
 
@@ -360,15 +382,4 @@ cb_component_state_changed(NiceAgent *agent, guint stream_id,
   } else if (state == NICE_COMPONENT_STATE_FAILED) {
     g_main_loop_quit (gloop);
   }
-}
-
-static void
-cb_nice_recv(NiceAgent *agent, guint stream_id, guint component_id,
-    guint len, gchar *buf, gpointer data)
-{
-  if (len == 1 && buf[0] == '\0')
-    g_main_loop_quit (gloop);
-
-  printf("%.*s", len, buf);
-  fflush(stdout);
 }
