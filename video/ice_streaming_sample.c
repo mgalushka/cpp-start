@@ -27,20 +27,19 @@ static GCond gather_cond, negotiate_cond;
 
 static const gchar *state_name[] = {"disconnected", "gathering", "connecting",
                                     "connected", "ready", "failed"};
-   
-static void cb_candidate_gathering_done(NiceAgent *agent, guint stream_id,
-    gpointer data);
-static void cb_component_state_changed(NiceAgent *agent, guint stream_id,
-    guint component_id, guint state,
-    gpointer data);
-static void cb_nice_recv(NiceAgent *agent, guint stream_id, guint component_id,
-    guint len, gchar *buf, gpointer data);
+
+/* declarations */
+static void cb_candidate_gathering_done(
+  NiceAgent *agent, guint stream_id, gpointer data);
+
+static void cb_component_state_changed(
+  NiceAgent *agent, guint stream_id, guint component_id, guint state, gpointer data);
 
 static void * example_thread(void *data);
 
 static void cb_message (GstBus *bus, GstMessage *msg, CustomData *data);
 
-
+/* main */
 int main(int argc, char *argv[]) {
   GstMessage *msg;
 
