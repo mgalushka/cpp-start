@@ -1,3 +1,6 @@
+// 2 modes to start: 0 - controlling (sender), 1 - controlled (receiver):
+// ./ice_streaming_sample.o 0 $(host -4 -t A stun.stunprotocol.org | awk '{ print $4 }') --gst-debug-level=4
+// ./ice_streaming_sample.o 1 $(host -4 -t A stun.stunprotocol.org | awk '{ print $4 }') --gst-debug-level=4
 #include <gst/gst.h>
 
 #include <stdlib.h>
@@ -84,10 +87,7 @@ static void cb_message (GstBus *bus, GstMessage *msg, CustomData *data) {
 }
 
 int main(int argc, char *argv[]) {
-  GstElement *pipeline, *source, *sink, *vertigotv;
-  GstBus *bus;
   GstMessage *msg;
-  GstStateChangeReturn ret;
 
   GThread *gexamplethread;
 
@@ -118,58 +118,9 @@ int main(int argc, char *argv[]) {
 
    
   /* Initialize GStreamer */
-  gst_init (&argc, &argv);
-    
-  /* Create the elements */
-  source = gst_element_factory_make ("videotestsrc", "source");
-  vertigotv = gst_element_factory_make ("vertigotv", "effect");
-  sink = gst_element_factory_make ("autovideosink", "sink");
-
-  //sink = gst_element_factory_make ("autovideosink", "sink");
-    
-  /* Create the empty pipeline */
-  pipeline = gst_pipeline_new ("test-pipeline");
-    
-  if (!pipeline || !source || !vertigotv || !sink) {
-    g_printerr ("Not all elements could be created.\n");
-    return -1;
-  }
-   
-  /* Build the pipeline */
-  gst_bin_add_many (GST_BIN (pipeline), source, vertigotv, sink, NULL);
-  if (
-    gst_element_link (source, vertigotv) != TRUE ||
-    gst_element_link (vertigotv, sink) != TRUE
-  ) {
-    g_printerr ("Elements could not be linked.\n");
-    gst_object_unref (pipeline);
-    return -1;
-  }
-   
-  /* Modify the source's properties */
-  g_object_set (source, "pattern", 0, NULL);
-   
-  /* Start playing */
-  ret = gst_element_set_state (pipeline, GST_STATE_PLAYING);
-  if (ret == GST_STATE_CHANGE_FAILURE) {
-    g_printerr ("Unable to set the pipeline to the playing state.\n");
-    gst_object_unref (pipeline);
-    return -1;
-  }
-   
-  /* Wait until error or EOS */
-  bus = gst_element_get_bus (pipeline);
-
-
-  CustomData data;
+  gst_init (&argc, &argv);  
 
   gloop = g_main_loop_new (NULL, FALSE);
-
-  data.pipeline = pipeline;
-  data.is_live = FALSE;
-
-  gst_bus_add_signal_watch (bus);
-  g_signal_connect (bus, "message", G_CALLBACK (cb_message), &data);
 
   // Run the mainloop and the example thread
   exit_thread = FALSE;
@@ -182,30 +133,32 @@ int main(int argc, char *argv[]) {
    
   /* Free resources */
   g_main_loop_unref(gloop);
-  gst_object_unref (bus);
-  gst_element_set_state (pipeline, GST_STATE_NULL);
-  gst_object_unref (pipeline);
 
   return EXIT_SUCCESS;
 }
 
-static void *
-example_thread(void *data)
-{
+static void * example_thread(void *data) {
   NiceAgent *agent;
   GIOChannel* io_stdin;
   guint stream_id;
   gchar *line = NULL;
   gchar *sdp, *sdp64;
 
+  GstStateChangeReturn ret;
+  GstElement *pipeline, *source, *sink, *vertigotv;
+  GstBus *bus;
+
   io_stdin = g_io_channel_unix_new(fileno(stdin));
   g_io_channel_set_flags (io_stdin, G_IO_FLAG_NONBLOCK, NULL);
 
   // Create the nice agent
-  agent = nice_agent_new(g_main_loop_get_context (gloop),
-      NICE_COMPATIBILITY_RFC5245);
-  if (agent == NULL)
+  agent = nice_agent_new(
+    g_main_loop_get_context (gloop),
+    NICE_COMPATIBILITY_RFC5245);
+
+  if (agent == NULL) {
     g_error("Failed to create agent");
+  }
 
   // Set the STUN settings and controlling mode
   if (stun_addr) {
@@ -222,14 +175,20 @@ example_thread(void *data)
 
   // Create a new stream with one component
   stream_id = nice_agent_add_stream(agent, 1);
-  if (stream_id == 0)
+  if (stream_id == 0) {
     g_error("Failed to add stream");
+  }
   nice_agent_set_stream_name (agent, stream_id, "text");
 
   // Attach to the component to receive the data
   // Without this call, candidates cannot be gathered
-  nice_agent_attach_recv(agent, stream_id, 1,
-      g_main_loop_get_context (gloop), cb_nice_recv, NULL);
+  nice_agent_attach_recv(
+    agent,
+    stream_id,
+    1,
+    g_main_loop_get_context (gloop),
+    6,
+    NULL);
 
   // Start gathering local candidates
   if (!nice_agent_gather_candidates(agent, stream_id))
@@ -288,31 +247,87 @@ example_thread(void *data)
   if (exit_thread)
     goto end;
 
-  // Listen to stdin and send data written to it
-  printf("\nSend lines to remote (Ctrl-D to quit):\n");
-  printf("> ");
+  // Now create pipelines depending on who is sending and who is receiving video stream
+  printf("\nNegotiations complete:\n");
   fflush (stdout);
-  while (!exit_thread) {
-    GIOStatus s = g_io_channel_read_line (io_stdin, &line, NULL, NULL, NULL);
 
-    if (s == G_IO_STATUS_NORMAL) {
-      nice_agent_send(agent, stream_id, 1, strlen(line), line);
-      g_free (line);
-      printf("> ");
-      fflush (stdout);
-    } else if (s == G_IO_STATUS_AGAIN) {
-      usleep (100000);
-    } else {
-      // Ctrl-D was pressed.
-      nice_agent_send(agent, stream_id, 1, 1, "\0");
-      break;
+  /* ================== START PIPELINES CREATION CODE ================== */
+  /* Create the empty pipeline */
+  pipeline = gst_pipeline_new ("test-pipeline");
+    
+  /* Create the elements */
+  // sender
+  if (controlling == 0) {
+    source = gst_element_factory_make ("videotestsrc", "source");
+    sink = gst_element_factory_make ("nicesink", "sink");
+
+    /* Build the pipeline */
+    gst_bin_add_many (GST_BIN (pipeline), source, sink, NULL);
+    if (gst_element_link (source, vertigotv) != TRUE) {
+      g_printerr ("Elements could not be linked.\n");
+      gst_object_unref (pipeline);
+      return -1;
+    }
+     
+    /* Modify the source's properties */
+    g_object_set (source, "pattern", 0, NULL);
+     
+    /* Start playing */
+    ret = gst_element_set_state (pipeline, GST_STATE_PLAYING);
+    if (ret == GST_STATE_CHANGE_FAILURE) {
+      g_printerr ("Unable to set the pipeline to the playing state.\n");
+      gst_object_unref (pipeline);
+      return -1;
     }
   }
+
+  // receiver
+  else if (controlling == 1) {
+    source = gst_element_factory_make ("nicesrc", "source");
+    sink = gst_element_factory_make ("autovideosink", "sink");
+
+    if (!pipeline || !source || !sink) {
+      g_printerr ("Not all elements could be created.\n");
+      return -1;
+    }
+     
+    /* Build the pipeline */
+    gst_bin_add_many (GST_BIN (pipeline), source, sink, NULL);
+    if (gst_element_link (source, sink) != TRUE) {
+      g_printerr ("Elements could not be linked.\n");
+      gst_object_unref (pipeline);
+      return -1;
+    }
+  } 
+
+  // error state
+  else {
+    g_printerr ("Neither sender nor receiver.\n");
+    return -1;
+  }
+  
+   
+  /* Wait until error or EOS */
+  bus = gst_element_get_bus (pipeline);
+
+
+  CustomData customData;
+
+  customData.pipeline = pipeline;
+  customData.is_live = FALSE;
+
+  gst_bus_add_signal_watch (bus);
+  g_signal_connect (bus, "message", G_CALLBACK (cb_message), &customData);
+  /* ================== END PIPELINES CREATION CODE ================== */
 
 end:
   g_object_unref(agent);
   g_io_channel_unref (io_stdin);
   g_main_loop_quit (gloop);
+
+  gst_object_unref (bus);
+  gst_element_set_state (pipeline, GST_STATE_NULL);
+  gst_object_unref (pipeline);
 
   return NULL;
 }

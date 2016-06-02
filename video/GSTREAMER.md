@@ -38,7 +38,7 @@ Add `--gst-debug-level=4` flag to gstreamer application
 
 # Webcam
 
-How to strem video from webcam on mac:
+How to stream video from webcam on mac:
 ```
 gst-launch-1.0 wrappercamerabinsrc mode=2  ! video/x-raw, width=320, height=240 ! autovideosink
 gst-launch-1.0 wrappercamerabinsrc mode=2  ! video/x-raw, width=320, height=240 ! udpsink host=127.0.0.1 port=1234
