@@ -59,10 +59,12 @@ int main(int argc, char *argv[]) {
 
   if (argc > 2) {
     stun_addr = argv[2];
-    if (argc > 3)
+    if (argc > 3) {
       stun_port = atoi(argv[3]);
-    else
+    }
+    else {
       stun_port = 3478;
+    }
 
     g_debug("Using stun server '[%s]:%u'\n", stun_addr, stun_port);
   }
