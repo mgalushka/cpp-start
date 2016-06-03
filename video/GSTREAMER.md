@@ -84,3 +84,8 @@ b ice_streaming_sample.c:389
 b ice_streaming_sample.c:407
 run 0 $(host -4 -t A stun.stunprotocol.org | awk '{ print $4 }') --gst-debug-level=5
 ```
+
+# Suggestions on integration:
+
+Look here:
+https://github.com/since2014/p2p-streaming/blob/142e9d5c7bd6c751223179f25b73e847359bd7ca/Receive_Video_Libnice_From_RPI/jni/Stream/receive_audio.c
