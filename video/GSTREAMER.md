@@ -65,3 +65,22 @@ Watch video from internet:
 ```
 gst-launch-1.0 playbin uri=http://docs.gstreamer.com/media/sintel_trailer-480p.webm
 ```
+
+# Debugging
+
+```
+brew install gdb
+sudo gdb ./ice_streaming_sample.o
+```
+Go through this process to codesign gdb:
+http://www.patosai.com/blog/post/installing-gdb-on-mac-os-x-yosemite
+
+In gdb session:
+```
+set scheduler-locking on
+b ice_streaming_sample.c:232
+b ice_streaming_sample.c:336
+b ice_streaming_sample.c:389
+b ice_streaming_sample.c:407
+run 0 $(host -4 -t A stun.stunprotocol.org | awk '{ print $4 }') --gst-debug-level=5
+```

@@ -20,6 +20,7 @@ GMainLoop *gloop;
 
 static gchar *stun_addr = NULL;
 static guint stun_port;
+static guint self_component_id;
 static gboolean controlling;
 static gboolean exit_thread, candidate_gathering_done, negotiation_done;
 static GMutex gather_mutex, negotiate_mutex;
@@ -179,6 +180,7 @@ static void * example_thread(void *data) {
   printf("> ");
   fflush (stdout);
 
+  // TODO: we only need verificion key on receiver, on ????? who knows???
   while (!exit_thread) {
     GIOStatus s = g_io_channel_read_line (io_stdin, &line, NULL, NULL, NULL);
     if (s == G_IO_STATUS_NORMAL) {
@@ -221,28 +223,39 @@ static void * example_thread(void *data) {
   /* ================== START PIPELINES CREATION CODE ================== */
   /* Create the empty pipeline */
   pipeline = gst_pipeline_new ("test-pipeline");
+
+  GstElement *videoconvert, *h263p, *rtph263ppay;
     
   /* Create the elements */
   // sender
   if (controlling == 0) {
     source = gst_element_factory_make ("videotestsrc", "source");
+    videoconvert = gst_element_factory_make ("videoconvert", "convert");
+    h263p = gst_element_factory_make ("avenc_h263p", "h263p");
+    rtph263ppay = gst_element_factory_make ("rtph263ppay", "rtph263ppay");
     sink = gst_element_factory_make ("nicesink", "sink");
 
-    /* Build the pipeline */
-    gst_bin_add_many (GST_BIN (pipeline), source, sink, NULL);
-    if (gst_element_link (source, vertigotv) != TRUE) {
-      g_printerr ("Elements could not be linked.\n");
-      gst_object_unref (pipeline);
-      return -1;
-    }
-     
     /* Modify the source's properties */
     g_object_set (source, "pattern", 0, NULL);
-     
-    /* Start playing */
-    ret = gst_element_set_state (pipeline, GST_STATE_PLAYING);
-    if (ret == GST_STATE_CHANGE_FAILURE) {
-      g_printerr ("Unable to set the pipeline to the playing state.\n");
+
+    g_object_set (sink, "agent", agent, NULL);
+    g_object_set (sink, "stream", stream_id, NULL);
+    g_object_set (sink, "component", self_component_id, NULL);
+
+    if (!pipeline || !source || !videoconvert || !h263p || !rtph263ppay || !sink) {
+      g_printerr ("Not all elements could be created.\n");
+      return -1;
+    }
+
+    /* Build the pipeline */
+    gst_bin_add_many (GST_BIN (pipeline), source, videoconvert, h263p, rtph263ppay, sink, NULL);
+    if (
+      gst_element_link (source, videoconvert) != TRUE ||
+      gst_element_link (videoconvert, h263p) != TRUE ||
+      gst_element_link (h263p, rtph263ppay) != TRUE ||
+      gst_element_link (rtph263ppay, sink) != TRUE
+    ) {
+      g_printerr ("Elements could not be linked.\n");
       gst_object_unref (pipeline);
       return -1;
     }
@@ -251,13 +264,18 @@ static void * example_thread(void *data) {
   // receiver
   else if (controlling == 1) {
     source = gst_element_factory_make ("nicesrc", "source");
-    sink = gst_element_factory_make ("autovideosink", "sink");
+    sink = gst_element_factory_make ("fakesink", "sink");
+
+    g_object_set (source, "agent", agent, NULL);
+    g_object_set (source, "stream", stream_id, NULL);
+    g_object_set (source, "component", self_component_id, NULL);
+    g_object_set (sink, "dump", 1, NULL);
 
     if (!pipeline || !source || !sink) {
       g_printerr ("Not all elements could be created.\n");
       return -1;
     }
-     
+
     /* Build the pipeline */
     gst_bin_add_many (GST_BIN (pipeline), source, sink, NULL);
     if (gst_element_link (source, sink) != TRUE) {
@@ -265,11 +283,19 @@ static void * example_thread(void *data) {
       gst_object_unref (pipeline);
       return -1;
     }
-  } 
+  }
 
   // error state
   else {
     g_printerr ("Neither sender nor receiver.\n");
+    return -1;
+  }
+
+  /* Start playing */
+  ret = gst_element_set_state (pipeline, GST_STATE_PLAYING);
+  if (ret == GST_STATE_CHANGE_FAILURE) {
+    g_printerr ("Unable to set the pipeline to the playing state.\n");
+    gst_object_unref (pipeline);
     return -1;
   }
   
@@ -286,6 +312,10 @@ static void * example_thread(void *data) {
   gst_bus_add_signal_watch (bus);
   g_signal_connect (bus, "message", G_CALLBACK (cb_message), &customData);
   /* ================== END PIPELINES CREATION CODE ================== */
+
+  while (TRUE) {
+    usleep(10000);
+  }
 
 end:
   g_object_unref(agent);
@@ -382,6 +412,8 @@ static void cb_component_state_changed(
     negotiation_done = TRUE;
     g_cond_signal(&negotiate_cond);
     g_mutex_unlock(&negotiate_mutex);
+
+    self_component_id = component_id;
   } else if (state == NICE_COMPONENT_STATE_FAILED) {
     g_main_loop_quit (gloop);
   }
