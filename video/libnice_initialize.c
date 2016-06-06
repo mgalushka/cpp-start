@@ -47,12 +47,12 @@ NiceAgent *libnice_create_NiceAgent_without_gstreamer ( gboolean *signal_type,
 }
 
 NiceAgent *libnice_create_NiceAgent_with_gstreamer ( gboolean *signal_type,
-                                                     GMainContext *context)
+                                                     CustomData *data)
 {
     NiceAgent *agent;
 
     // Create the nice agent
-    agent = nice_agent_new( context,
+    agent = nice_agent_new( data->context,
                             NICE_COMPATIBILITY_RFC5245);
     if (agent == NULL) {
         return NULL;
@@ -61,16 +61,16 @@ NiceAgent *libnice_create_NiceAgent_with_gstreamer ( gboolean *signal_type,
     // Set the STUN settings and controlling mode
     g_object_set(G_OBJECT(agent),
                  "stun-server",
-                 STUNSR_ADDR,
+                 data->stun_ip_address,
                  NULL);
 
     g_object_set(G_OBJECT(agent),
                  "stun-server-port",
-                 STUNSR_PORT, NULL);
+                 data->stun_port, NULL);
 
     g_object_set(G_OBJECT(agent),
                  "controlling-mode",
-                 0,
+                 data->controlling_mode,
                  NULL);
 
     // Connect to the signals
@@ -105,8 +105,7 @@ void  libnice_candidate_gathering_done (NiceAgent *agent, guint stream_id, gbool
     memset(remote_info, '\0', 181);
 
     libnice_print_local_data (agent, stream_id, 1, local_info);
-    libnice_receive_information_from_client_remote (local_info,
-                                                    remote_info);
+
     libnice_parse_remote_data (agent,
                                stream_id,
                                1,
@@ -117,97 +116,15 @@ void  libnice_candidate_gathering_done (NiceAgent *agent, guint stream_id, gbool
 
 void libnice_print_local_data (NiceAgent *agent, guint stream_id, guint component_id, gchar* local_info)
 {
-    gchar *local_ufrag = NULL;
-    gchar *local_password = NULL;
-    gchar ipaddr[INET6_ADDRSTRLEN];
-    GSList *cands = NULL, *item;
+  gchar *sdp, *sdp64;
 
-    if (!nice_agent_get_local_credentials(  agent,
-                                            stream_id,
-                                            &local_ufrag,
-                                            &local_password ))
-    {
-        goto end;
-    }
-
-    cands = nice_agent_get_local_candidates(agent,
-                                            stream_id,
-                                            component_id);
-    if (cands == NULL)
-        goto end;
-
-    printf("%s %s", local_ufrag, local_password);
-    sprintf(local_info, "%s %s", local_ufrag, local_password);
-
-    for (item = cands; item; item = item->next)
-    {
-        NiceCandidate *c = (NiceCandidate *)item->data;
-
-        nice_address_to_string(&c->addr, ipaddr);
-
-        printf(" %s,%u,%s,%u,%s",
-        c->foundation,
-        c->priority,
-        ipaddr,
-        nice_address_get_port(&c->addr),
-        candidate_type_name[c->type]);
-
-        sprintf(local_info + strlen(local_info), " %s,%u,%s,%u,%s",
-        c->foundation,
-        c->priority,
-        ipaddr,
-        nice_address_get_port(&c->addr),
-        candidate_type_name[c->type]);
-    }
-
-    printf("\n");
-
-    end:
-        if (local_ufrag)
-            g_free(local_ufrag);
-        if (local_password)
-            g_free(local_password);
-        if (cands)
-            g_slist_free_full(cands, (GDestroyNotify)&nice_candidate_free);
-}
-
-int libnice_receive_information_from_client_remote (gchar *local_info,
-                                                    gchar *remote_info)
-{
-    char *header, *init, *dest, *data;
-    char buffer[181] = {0};
-    char combine[181] = {0};
-    char receiver[181] = {0};
-    char sender[181] = {0};
-
-    while (1)
-    {
-        if (recv(global_socket, buffer, 181, NULL))
-        {
-            /* Decode received data */
-            Base64Decode(buffer, receiver, BUFFFERLEN);
-
-            header = strtok(receiver, "$");
-            init   = strtok(NULL, "$");
-            dest   = strtok(NULL, "$");
-            data   = strtok(NULL, "$");
-
-            /* Infomation packet */
-            if (!strcmp(header, "002"))
-            {
-                /* Get remote information */
-                memcpy(remote_info, data, strlen(data));
-
-                /* Send local infor to remote */
-                sprintf(combine, "002$%s$%s$%s", dest, init, local_info);
-                Base64Encode(combine, sender, BUFFFERLEN);
-                send(global_socket, sender, 181, NULL);
-                break;
-            }
-        }
-
-        return 0;
-    }
+  // Candidate gathering is done. Send our local candidates on stdout
+  printf("Copy this line to remote client:\n");
+  sdp = nice_agent_generate_local_sdp (agent);
+  sdp64 = g_base64_encode ((const guchar *)sdp, strlen (sdp));
+  printf("\n  %s\n", sdp64);
+  g_free (sdp);
+  g_free (sdp64);
 }
 
 void libnice_parse_remote_data (NiceAgent *agent,
@@ -215,102 +132,37 @@ void libnice_parse_remote_data (NiceAgent *agent,
                                 guint component_id,
                                 gchar* remote_info)
 {
-    GSList *remote_candidates = NULL;
-    gchar **line_argv = NULL;
-    const gchar *ufrag = NULL;
-    const gchar *passwd = NULL;
-    int result = EXIT_FAILURE;
-    int i;
+  gchar *sdp;
+  gchar *line = NULL;
 
-    line_argv = g_strsplit_set (remote_info, " \t\n", 0);
-    for (i = 0; line_argv && line_argv[i]; i++) {
-    if (strlen (line_argv[i]) == 0)
-    continue;
+  // Listen on stdin for the remote candidate list
+  printf("Enter remote data (single line, no wrapping):\n");
+  printf("> ");
+  fflush (stdout);
 
-    // first two args are remote ufrag and password
-    if (!ufrag) {
-    ufrag = line_argv[i];
-    } else if (!passwd) {
-    passwd = line_argv[i];
-    } else {
-    // Remaining args are serialized canidates (at least one is required)
-    NiceCandidate *c = libnice_parse_candidate(line_argv[i], stream_id);
+  while (TRUE) {
+    GIOStatus s = g_io_channel_read_line (io_stdin, &line, NULL, NULL, NULL);
+    if (s == G_IO_STATUS_NORMAL) {
+      gsize sdp_len;
 
-    if (c == NULL) {
-    g_message("failed to parse candidate: %s", line_argv[i]);
-    goto end;
+      sdp = (gchar *) g_base64_decode (line, &sdp_len);
+      // Parse remote candidate list and set it on the agent
+      if (sdp && nice_agent_parse_remote_sdp (agent, sdp) > 0) {
+        g_free (sdp);
+        g_free (line);
+        break;
+      } else {
+        fprintf(stderr, "ERROR: failed to parse remote data\n");
+        printf("Enter remote data (single line, no wrapping):\n");
+        printf("> ");
+        fflush (stdout);
+      }
+      g_free (sdp);
+      g_free (line);
+    } else if (s == G_IO_STATUS_AGAIN) {
+      usleep (100000);
     }
-    remote_candidates = g_slist_prepend(remote_candidates, c);
-    }
-    }
-    if (ufrag == NULL || passwd == NULL || remote_candidates == NULL) {
-    g_message("line must have at least ufrag, password, and one candidate");
-    goto end;
-    }
-
-    if (!nice_agent_set_remote_credentials(agent, stream_id, ufrag, passwd)) {
-    g_message("failed to set remote credentials");
-    goto end;
-    }
-
-    // Note: this will trigger the start of negotiation.
-    if (nice_agent_set_remote_candidates(agent, stream_id, component_id,
-    remote_candidates) < 1) {
-    g_message("failed to set remote candidates");
-    goto end;
-    }
-
-    result = EXIT_SUCCESS;
-
-    end:
-    if (line_argv != NULL)
-    g_strfreev(line_argv);
-    if (remote_candidates != NULL)
-    g_slist_free_full(remote_candidates, (GDestroyNotify)&nice_candidate_free);
-}
-
-NiceCandidate* libnice_parse_candidate (char *scand, guint stream_id)
-{
-    NiceCandidate *cand = NULL;
-    NiceCandidateType ntype;
-    gchar **tokens = NULL;
-    guint i;
-
-    tokens = g_strsplit (scand, ",", 5);
-    for (i = 0; tokens && tokens[i]; i++);
-    if (i != 5)
-        goto end;
-
-    for (i = 0; i < G_N_ELEMENTS (candidate_type_name); i++) {
-        if (strcmp(tokens[4], candidate_type_name[i]) == 0) {
-            ntype = i;
-            break;
-        }
-    }
-
-    if (i == G_N_ELEMENTS (candidate_type_name))
-        goto end;
-
-    cand = nice_candidate_new(ntype);
-    cand->component_id = 1;
-    cand->stream_id = stream_id;
-    cand->transport = NICE_CANDIDATE_TRANSPORT_UDP;
-    strncpy(cand->foundation, tokens[0], NICE_CANDIDATE_MAX_FOUNDATION);
-    cand->priority = atoi (tokens[1]);
-
-    if (!nice_address_set_from_string(&cand->addr, tokens[2])) {
-        g_message("failed to parse addr: %s", tokens[2]);
-        nice_candidate_free(cand);
-        cand = NULL;
-        goto end;
-    }
-
-    nice_address_set_port(&cand->addr, atoi (tokens[3]));
-
-    end:
-    g_strfreev(tokens);
-
-    return cand;
+  }
 }
 
 void libnice_component_state_changed(NiceAgent *agent, guint stream_id,

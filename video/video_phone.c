@@ -3,6 +3,9 @@
 #include "gstreamer_utils.h"
 #include "send_video.h"
 
+GST_DEBUG_CATEGORY_STATIC (video_phone);
+#define GST_CAT_DEFAULT video_phone
+
 /*
  * To run:
  * ./video_phone.o 0 $(host -4 -t A stun.stunprotocol.org | awk '{ print $4 }') --gst-debug-level=4
@@ -19,8 +22,8 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
-  gchar *stun_addr;
-  gint stun_port;
+  gchar *stun_addr = NULL;
+  gint stun_port = 0;
   if (argc > 2) {
     stun_addr = argv[2];
     if (argc > 3) {
@@ -34,7 +37,17 @@ int main(int argc, char *argv[]) {
   }
 
   /* Initialize GStreamer */
-  gst_init (&argc, &argv);
+  gst_init (NULL, NULL);
+  GST_DEBUG_CATEGORY_INIT (video_phone, "video_phone", 0, "video_phone log");
+
+  CustomData data = {};
+  data.stun_ip_address = stun_addr;
+  data.stun_port = stun_port;
+  data.controlling_mode = controlling;
+
+  /* initilize all the data */
+  __init();
+  _send_video_main(&data);
 
   return 0;
 }

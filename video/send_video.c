@@ -2,17 +2,17 @@
 
 void* _send_video_main (CustomData *data)
 {
-  data->agent = libnice_create_NiceAgent_with_gstreamer ( send_audio_gathering_done,
-                              data->context);
+  data->agent = libnice_create_NiceAgent_with_gstreamer ( video_send_gathering_done, data);
 
   // Create a new stream with one component
   data->stream_id = libnice_create_stream_id (data->agent);
 
-  while((*receive_audio_gathering_done) == FALSE)
-      usleep(100);
+  while((*video_send_gathering_done) == FALSE) {
+    usleep(100);
+  }
 
   /* Init Gstreamer */
-  _send_audio_init_gstreamer(data->agent, data->stream_id, data);
+  _send_video_init_gstreamer(data->agent, data->stream_id, data);
 
   // Set receiver function
   set_receiver (data->agent, data->stream_id, data->context);
@@ -24,16 +24,13 @@ void* _send_video_main (CustomData *data)
     data->context);
 }
 
-void  _send_audio_init_gstreamer(NiceAgent *magent, guint stream_id, CustomData *data)
+void  _send_video_init_gstreamer(NiceAgent *magent, guint stream_id, CustomData *data)
 {
-  GstElement *pipeline, *audiotestsrc, *openslessrc, *audioconvert, *caps, *rtpL16pay, *nicesink;
+  GstElement *pipeline, *source, *videoconvert, *h263p, *rtph263ppay, *sink;
   GstBus *bus;
   GstMessage *msg;
   GstStateChangeReturn ret;
   GSource *bus_source;
-
-  /* Initialize GStreamer */
-  gst_init (NULL, NULL);
 
   source = gst_element_factory_make ("videotestsrc", "source");
   videoconvert = gst_element_factory_make ("videoconvert", "convert");

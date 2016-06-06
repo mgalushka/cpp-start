@@ -33,7 +33,7 @@ on_error (GstBus     *bus,
       gchar *message_string;
 
       gst_message_parse_error (message, &err, &debug_info);
-      
+
       message_string = g_strdup_printf ("Error received from element %s: %s",
               GST_OBJECT_NAME (message->src), err->message);
 
@@ -51,4 +51,28 @@ void on_pad_added (GstElement* object, GstPad* pad, gpointer data)
   sinkpad = gst_element_get_static_pad (autovideosink, "sink");
   gst_pad_link (pad, sinkpad);
   gst_object_unref (sinkpad);
+}
+
+void set_receiver ( NiceAgent *agent,
+                    guint stream_id,
+                    GMainContext *context)
+{
+    nice_agent_attach_recv( agent,
+                            stream_id,
+                            1,
+                            context,
+                            controller_receiver,
+                            NULL);
+}
+
+void controller_receiver (	NiceAgent *agent,
+							guint stream_id,
+							guint component_id,
+							guint len,
+							gchar *buf,
+							gpointer data)
+{
+	if (len == 1 && buf[0] == '\0') {
+		g_main_loop_quit (gloop);
+  }
 }

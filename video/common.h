@@ -16,6 +16,12 @@
 #define CONTROLLING_MODE 1
 #define CONTROLLED_MODE 0
 
+GMainLoop *gloop;
+GIOChannel* io_stdin;
+
+gboolean *controller_gathering_done;
+gboolean *video_send_gathering_done;
+
 typedef struct _CustomData {
   GstElement *pipeline;
   GMainContext *context;
@@ -27,6 +33,9 @@ typedef struct _CustomData {
   guint stream_id;
   gchar *stun_ip_address;
   guint stun_port;
+  guint controlling_mode;
 } CustomData;
+
+void __init();
 
 #endif /* VPHONE_COMMON_H_ */
