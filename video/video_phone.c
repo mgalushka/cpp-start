@@ -3,9 +3,6 @@
 #include "gstreamer_utils.h"
 #include "send_video.h"
 
-GST_DEBUG_CATEGORY_STATIC (video_phone);
-#define GST_CAT_DEFAULT video_phone
-
 /*
  * To run:
  * ./video_phone.o 0 $(host -4 -t A stun.stunprotocol.org | awk '{ print $4 }') --gst-debug-level=4
@@ -23,31 +20,37 @@ int main(int argc, char *argv[]) {
   }
 
   gchar *stun_addr = NULL;
-  gint stun_port = 0;
+  gint stun_port = 3478;
   if (argc > 2) {
     stun_addr = argv[2];
-    if (argc > 3) {
-      stun_port = atoi(argv[3]);
-    }
-    else {
-      stun_port = 3478;
-    }
-
-    g_debug("Using stun server '[%s]:%u'\n", stun_addr, stun_port);
   }
 
-  /* Initialize GStreamer */
-  gst_init (NULL, NULL);
-  GST_DEBUG_CATEGORY_INIT (video_phone, "video_phone", 0, "video_phone log");
+  /* initilize GStreamer and all the data */
+  gst_init (&argc, &argv);
+
+  #if !GLIB_CHECK_VERSION(2, 36, 0)
+    g_type_init();
+  #endif
+
+  __init();
+
+  GST_INFO ("Initializing main loop");
+  gloop = g_main_loop_new (NULL, FALSE);
+
+  GST_INFO ("Using stun server '[%s]:%u'\n", stun_addr, stun_port);
 
   CustomData data = {};
+  data.context = g_main_loop_get_context (gloop);
   data.stun_ip_address = stun_addr;
   data.stun_port = stun_port;
   data.controlling_mode = controlling;
 
-  /* initilize all the data */
-  __init();
-  _send_video_main(&data);
+  GThread *gexamplethread = g_thread_new("example thread",
+                                         &_send_video_main,
+                                         &data);
+
+  g_main_loop_run (gloop);
+  g_thread_join (gexamplethread);
 
   return 0;
 }

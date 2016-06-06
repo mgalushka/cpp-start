@@ -10,7 +10,7 @@
 #include <unistd.h>
 
 #include <agent.h>
-  
+
 typedef struct _CustomData {
   gboolean is_live;
   GstElement *pipeline;
@@ -73,10 +73,11 @@ int main(int argc, char *argv[]) {
     g_type_init();
   #endif
 
-   
-  /* Initialize GStreamer */
-  gst_init (&argc, &argv);  
 
+  /* Initialize GStreamer */
+  gst_init (&argc, &argv);
+
+  GST_INFO ("Initializing main loop");
   gloop = g_main_loop_new (NULL, FALSE);
 
   // Run the mainloop and the example thread
@@ -87,7 +88,7 @@ int main(int argc, char *argv[]) {
 
   g_thread_join (gexamplethread);
 
-   
+
   /* Free resources */
   g_main_loop_unref(gloop);
 
@@ -225,7 +226,7 @@ static void * example_thread(void *data) {
   pipeline = gst_pipeline_new ("test-pipeline");
 
   GstElement *videoconvert, *h263p, *rtph263ppay;
-    
+
   /* Create the elements */
   // sender
   if (controlling == 0) {
@@ -240,7 +241,7 @@ static void * example_thread(void *data) {
 
     g_object_set (sink, "agent", agent, NULL);
     g_object_set (sink, "stream", stream_id, NULL);
-    g_object_set (sink, "component", self_component_id, NULL);
+    g_object_set (sink, "component", 1, NULL);
 
     if (!pipeline || !source || !videoconvert || !h263p || !rtph263ppay || !sink) {
       g_printerr ("Not all elements could be created.\n");
@@ -248,13 +249,12 @@ static void * example_thread(void *data) {
     }
 
     /* Build the pipeline */
-    gst_bin_add_many (GST_BIN (pipeline), source, videoconvert, h263p, rtph263ppay, sink, NULL);
-    if (
-      gst_element_link (source, videoconvert) != TRUE ||
-      gst_element_link (videoconvert, h263p) != TRUE ||
-      gst_element_link (h263p, rtph263ppay) != TRUE ||
-      gst_element_link (rtph263ppay, sink) != TRUE
-    ) {
+    gst_bin_add_many (GST_BIN (pipeline), source, videoconvert,
+          h263p, rtph263ppay, sink, NULL);
+
+    if (gst_element_link_many (source, videoconvert, h263p,
+              rtph263ppay, sink, NULL) != TRUE)
+    {
       g_printerr ("Elements could not be linked.\n");
       gst_object_unref (pipeline);
       return -1;
@@ -291,6 +291,10 @@ static void * example_thread(void *data) {
     return -1;
   }
 
+  bus = gst_element_get_bus (pipeline);
+  gst_bus_enable_sync_message_emission (bus);
+  gst_bus_add_signal_watch (bus);
+
   /* Start playing */
   ret = gst_element_set_state (pipeline, GST_STATE_PLAYING);
   if (ret == GST_STATE_CHANGE_FAILURE) {
@@ -298,11 +302,6 @@ static void * example_thread(void *data) {
     gst_object_unref (pipeline);
     return -1;
   }
-  
-   
-  /* Wait until error or EOS */
-  bus = gst_element_get_bus (pipeline);
-
 
   CustomData customData;
 
@@ -332,17 +331,17 @@ end:
 /*
  * Callback to be called when piepile receives message/data is updates
  */
-static void cb_message (GstBus *bus, GstMessage *msg, CustomData *data) {   
+static void cb_message (GstBus *bus, GstMessage *msg, CustomData *data) {
   switch (GST_MESSAGE_TYPE (msg)) {
     case GST_MESSAGE_ERROR: {
       GError *err;
       gchar *debug;
-       
+
       gst_message_parse_error (msg, &err, &debug);
       g_print ("Error: %s\n", err->message);
       g_error_free (err);
       g_free (debug);
-       
+
       gst_element_set_state (data->pipeline, GST_STATE_READY);
       g_main_loop_quit (gloop);
       break;
@@ -354,10 +353,10 @@ static void cb_message (GstBus *bus, GstMessage *msg, CustomData *data) {
       break;
     case GST_MESSAGE_BUFFERING: {
       gint percent = 0;
-       
+
       /* If the stream is live, we do not care about buffering. */
       if (data->is_live) break;
-       
+
       gst_message_parse_buffering (msg, &percent);
       g_print ("Buffering (%3d%%)\r", percent);
       /* Wait until buffering is complete before start/resume playing */

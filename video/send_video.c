@@ -2,10 +2,18 @@
 
 void* _send_video_main (CustomData *data)
 {
-  data->agent = libnice_create_NiceAgent_with_gstreamer ( video_send_gathering_done, data);
+  GST_INFO ("Creating libnice agent");
+  libnice_create_NiceAgent_with_gstreamer ( video_send_gathering_done, data);
+  GST_INFO ("libnice agent created");
+
+  if (data->agent == NULL || data->agent == 0) {
+    GST_ERROR ("libnice agent IS NULL!");
+    return NULL;
+  }
 
   // Create a new stream with one component
-  data->stream_id = libnice_create_stream_id (data->agent);
+  data->stream_id = libnice_create_stream_id (data->agent, "send_video");
+  GST_INFO ("libnice stream_id created");
 
   while((*video_send_gathering_done) == FALSE) {
     usleep(100);
@@ -32,6 +40,7 @@ void  _send_video_init_gstreamer(NiceAgent *magent, guint stream_id, CustomData 
   GstStateChangeReturn ret;
   GSource *bus_source;
 
+  GST_INFO ("Pipeline initialization");
   source = gst_element_factory_make ("videotestsrc", "source");
   videoconvert = gst_element_factory_make ("videoconvert", "convert");
   h263p = gst_element_factory_make ("avenc_h263p", "h263p");
@@ -70,12 +79,16 @@ void  _send_video_init_gstreamer(NiceAgent *magent, guint stream_id, CustomData 
     return;
   }
 
+  GST_INFO ("Pipeline created, registing on bus");
+
   bus = gst_element_get_bus (pipeline);
   gst_bus_enable_sync_message_emission (bus);
   gst_bus_add_signal_watch (bus);
 
   g_signal_connect (bus, "message::error",
       (GCallback) on_error, NULL);
+
+  GST_INFO ("Registing pipeline on bus");
 
   data->pipeline = pipeline;
   gst_element_set_state(data->pipeline, GST_STATE_PLAYING);

@@ -1,62 +1,21 @@
 #include "libnice_initialize.h"
 
-NiceAgent *libnice_create_NiceAgent_without_gstreamer ( gboolean *signal_type,
-                                                        GMainContext *context)
-{
-    NiceAgent *agent;
-
-    // Create the nice agent
-    agent = nice_agent_new( context,
-                            NICE_COMPATIBILITY_RFC5245);
-    if (agent == NULL) {
-        return NULL;
-    }
-
-    // Set the STUN settings and controlling mode
-    g_object_set(G_OBJECT(agent),
-                 "stun-server",
-                 STUNSR_ADDR,
-                 NULL);
-
-    g_object_set(G_OBJECT(agent),
-                 "stun-server-port",
-                 STUNSR_PORT, NULL);
-
-    g_object_set(G_OBJECT(agent),
-                 "controlling-mode",
-                 0,
-                 NULL);
-
-    // Connect to the signals
-    g_signal_connect(G_OBJECT(agent),
-                     "candidate-gathering-done",
-                     G_CALLBACK(libnice_candidate_gathering_done),
-                     signal_type);
-
-    g_signal_connect(G_OBJECT(agent),
-                     "new-selected-pair",
-                     G_CALLBACK(libnice_new_selected_pair),
-                     signal_type);
-
-    g_signal_connect(G_OBJECT(agent),
-                     "component-state-changed",
-                     G_CALLBACK(libnice_component_state_changed),
-                     signal_type);
-
-    return agent;
-}
-
 NiceAgent *libnice_create_NiceAgent_with_gstreamer ( gboolean *signal_type,
                                                      CustomData *data)
 {
     NiceAgent *agent;
 
     // Create the nice agent
-    agent = nice_agent_new( data->context,
+    agent = nice_agent_new( g_main_loop_get_context (gloop),
                             NICE_COMPATIBILITY_RFC5245);
     if (agent == NULL) {
         return NULL;
     }
+
+    GST_INFO ("Initializing libnice with gstreamer: %s:%d, mode=%d",
+              data->stun_ip_address,
+              data->stun_port,
+              data->controlling_mode);
 
     // Set the STUN settings and controlling mode
     g_object_set(G_OBJECT(agent),
@@ -66,7 +25,8 @@ NiceAgent *libnice_create_NiceAgent_with_gstreamer ( gboolean *signal_type,
 
     g_object_set(G_OBJECT(agent),
                  "stun-server-port",
-                 data->stun_port, NULL);
+                 data->stun_port,
+                 NULL);
 
     g_object_set(G_OBJECT(agent),
                  "controlling-mode",
@@ -79,12 +39,28 @@ NiceAgent *libnice_create_NiceAgent_with_gstreamer ( gboolean *signal_type,
                      G_CALLBACK(libnice_candidate_gathering_done),
                      signal_type);
 
+    g_signal_connect(G_OBJECT(agent),
+                     "component-state-changed",
+                     G_CALLBACK(libnice_component_state_changed),
+                     NULL);
+
+    data->agent = agent;
     return agent;
 }
 
-guint libnice_create_stream_id (NiceAgent *agent)
+guint libnice_create_stream_id (NiceAgent *agent, gchar *stream_name)
 {
-    return nice_agent_add_stream(agent, 1);
+  guint stream_id;
+
+  GST_INFO ("libnice started adding stream");
+  stream_id = nice_agent_add_stream(agent, 1);
+  GST_INFO ("libnice add stream");
+
+  if (stream_id == 0) {
+    GST_ERROR("Failed to add stream");
+  }
+  nice_agent_set_stream_name (agent, stream_id, stream_name);
+  return stream_id;
 }
 
 int libnice_start_gather_candidate (NiceAgent *agent, guint stream_id, GMainContext *context)
@@ -98,19 +74,23 @@ int libnice_start_gather_candidate (NiceAgent *agent, guint stream_id, GMainCont
 
 void  libnice_candidate_gathering_done (NiceAgent *agent, guint stream_id, gboolean *signal_type)
 {
+    GST_INFO ("libnice_candidate_gathering_done");
     gchar *local_info = (gchar*)malloc(181);
     gchar *remote_info = (gchar*)malloc(181);
 
     memset(local_info, '\0', 181);
     memset(remote_info, '\0', 181);
 
+    GST_INFO ("Before libnice_print_local_data");
     libnice_print_local_data (agent, stream_id, 1, local_info);
 
+    GST_INFO ("Before libnice_parse_remote_data");
     libnice_parse_remote_data (agent,
                                stream_id,
                                1,
                                remote_info);
 
+    GST_INFO ("Completed: libnice_candidate_gathering_done");
     (*signal_type) = TRUE;
 }
 
@@ -119,10 +99,10 @@ void libnice_print_local_data (NiceAgent *agent, guint stream_id, guint componen
   gchar *sdp, *sdp64;
 
   // Candidate gathering is done. Send our local candidates on stdout
-  printf("Copy this line to remote client:\n");
+  GST_INFO ("Copy this line to remote client:");
   sdp = nice_agent_generate_local_sdp (agent);
   sdp64 = g_base64_encode ((const guchar *)sdp, strlen (sdp));
-  printf("\n  %s\n", sdp64);
+  GST_INFO ("\n  %s\n", sdp64);
   g_free (sdp);
   g_free (sdp64);
 }
@@ -134,6 +114,11 @@ void libnice_parse_remote_data (NiceAgent *agent,
 {
   gchar *sdp;
   gchar *line = NULL;
+
+  GIOChannel* io_stdin;
+
+  io_stdin = g_io_channel_unix_new(fileno(stdin));
+  g_io_channel_set_flags (io_stdin, G_IO_FLAG_NONBLOCK, NULL);
 
   // Listen on stdin for the remote candidate list
   printf("Enter remote data (single line, no wrapping):\n");

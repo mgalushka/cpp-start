@@ -17,7 +17,6 @@
 #define CONTROLLED_MODE 0
 
 GMainLoop *gloop;
-GIOChannel* io_stdin;
 
 gboolean *controller_gathering_done;
 gboolean *video_send_gathering_done;
@@ -25,7 +24,6 @@ gboolean *video_send_gathering_done;
 typedef struct _CustomData {
   GstElement *pipeline;
   GMainContext *context;
-  GMainLoop *main_loop;
   gboolean initialized;
   GstElement *video_sink;
   GstBus *bus;

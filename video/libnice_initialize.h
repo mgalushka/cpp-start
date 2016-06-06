@@ -6,13 +6,10 @@
 GMutex gather_mutex, negotiate_mutex;
 gboolean exit_thread, candidate_gathering_done, negotiation_done;
 
-NiceAgent *libnice_create_NiceAgent_without_gstreamer (gboolean *signal_type,
-                                                       GMainContext *context);
-
 NiceAgent *libnice_create_NiceAgent_with_gstreamer ( gboolean *signal_type,
                                                      CustomData *data);
 
-guint libnice_create_stream_id (NiceAgent *agent);
+guint libnice_create_stream_id (NiceAgent *agent, gchar * stream_name);
 
 int libnice_start_gather_candidate (NiceAgent *agent,
                                     guint stream_id,
