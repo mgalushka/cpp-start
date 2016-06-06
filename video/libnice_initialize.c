@@ -1,6 +1,5 @@
 #include "libnice_initialize.h"
 
-
 NiceAgent *libnice_create_NiceAgent_without_gstreamer ( gboolean *signal_type,
                                                         GMainContext *context)
 {

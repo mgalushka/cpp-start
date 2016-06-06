@@ -1,4 +1,7 @@
-#include "stream.h"
+#ifndef VPHONE_LIBNICE_INIT_H_
+#define VPHONE_LIBNICE_INIT_H_
+
+#include "common.h"
 
 GMutex gather_mutex, negotiate_mutex;
 gboolean exit_thread, candidate_gathering_done, negotiation_done;
@@ -52,3 +55,5 @@ void libnice_new_selected_pair( NiceAgent *agent,
                                 gchar *lfoundation,
                                 gchar *rfoundation,
                                 gboolean signal_type);
+
+#endif // VPHONE_LIBNICE_INIT_H_

@@ -1,3 +1,5 @@
+#include "controller.h"
+
 CustomData* mData;
 
 void controller_receiver (NiceAgent *agent,

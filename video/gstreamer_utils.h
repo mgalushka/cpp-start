@@ -1,12 +1,7 @@
-#include <gst/gst.h>
+#ifndef VPHONE_LIBNICE_UTILS_H_
+#define VPHONE_LIBNICE_UTILS_H_
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <unistd.h>
-
-#include <agent.h>
+#include "common.h"
 
 void on_state_changed ( GstBus *bus,
                         GstMessage *msg,
@@ -19,3 +14,5 @@ void on_error ( GstBus     *bus,
 void on_pad_added (GstElement* object,
                    GstPad* pad,
                    gpointer data);
+
+#endif // VPHONE_LIBNICE_UTILS_H_

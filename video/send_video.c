@@ -1,4 +1,4 @@
-#include "gstreamer_utils.h"
+#include "send_video.h"
 
 void* _send_video_main (CustomData *data)
 {
@@ -41,7 +41,7 @@ void  _send_audio_init_gstreamer(NiceAgent *magent, guint stream_id, CustomData 
   rtph263ppay = gst_element_factory_make ("rtph263ppay", "rtph263ppay");
   sink = gst_element_factory_make ("nicesink", "sink");
 
-  /* 
+  /*
   // TODO: think about passing caps
   g_object_set (caps, "caps", gst_caps_from_string("audio/x-raw-int,"
       " channels=1, rate=16000, payload=96"), NULL);
