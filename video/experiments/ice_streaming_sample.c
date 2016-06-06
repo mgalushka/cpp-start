@@ -77,16 +77,6 @@ int main(int argc, char *argv[]) {
   /* Initialize GStreamer */
   gst_init (&argc, &argv);  
 
-  //Register gstreamer plugin libnice
-  gst_plugin_register_static (
-    GST_VERSION_MAJOR,
-    GST_VERSION_MINOR,
-    "nice",
-    "Interactive UDP connectivity establishment",
-    plugin_init, "0.1.4", "LGPL", "libnice",
-    "http://telepathy.freedesktop.org/wiki/", "");
-
-
   gloop = g_main_loop_new (NULL, FALSE);
 
   // Run the mainloop and the example thread
