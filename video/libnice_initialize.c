@@ -155,6 +155,11 @@ void libnice_component_state_changed(NiceAgent *agent, guint stream_id,
 {
     if (state == NICE_COMPONENT_STATE_READY)
     {
+        g_mutex_lock(&negotiate_mutex);
+        negotiation_done = TRUE;
+        g_cond_signal(&negotiate_cond);
+        g_mutex_unlock(&negotiate_mutex);
+
         NiceCandidate *local, *remote;
 
         // Get current selected candidate pair and print IP address used

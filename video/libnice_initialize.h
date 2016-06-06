@@ -6,6 +6,8 @@
 GMutex gather_mutex, negotiate_mutex;
 gboolean exit_thread, candidate_gathering_done, negotiation_done;
 
+GCond negotiate_cond;
+
 NiceAgent *libnice_create_NiceAgent_with_gstreamer ( gboolean *signal_type,
                                                      CustomData *data);
 

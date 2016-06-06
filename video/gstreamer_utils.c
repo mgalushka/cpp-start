@@ -37,11 +37,16 @@ on_error (GstBus     *bus,
       message_string = g_strdup_printf ("Error received from element %s: %s",
               GST_OBJECT_NAME (message->src), err->message);
 
+      GST_ERROR ("Error received from element %s: %s",
+                 GST_OBJECT_NAME (message->src),
+                 err->message);
+
       g_clear_error (&err);
       g_free (debug_info);
       g_free (message_string);
 }
 
+/*
 void on_pad_added (GstElement* object, GstPad* pad, gpointer data)
 {
   gchar *pad_name = gst_pad_get_name(pad);
@@ -52,6 +57,7 @@ void on_pad_added (GstElement* object, GstPad* pad, gpointer data)
   gst_pad_link (pad, sinkpad);
   gst_object_unref (sinkpad);
 }
+*/
 
 void set_receiver ( NiceAgent *agent,
                     guint stream_id,

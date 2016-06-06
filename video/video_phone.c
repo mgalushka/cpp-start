@@ -2,6 +2,7 @@
 #include "libnice_initialize.h"
 #include "gstreamer_utils.h"
 #include "send_video.h"
+#include "receive_video.h"
 
 /*
  * To run:
@@ -45,9 +46,19 @@ int main(int argc, char *argv[]) {
   data.stun_port = stun_port;
   data.controlling_mode = controlling;
 
-  GThread *gexamplethread = g_thread_new("example thread",
-                                         &_send_video_main,
-                                         &data);
+  GThread *gexamplethread = NULL;
+
+  if (controlling == 0) {
+    gexamplethread = g_thread_new("video send thread",
+                                  &_send_video_main,
+                                  &data);
+  } else if (controlling == 1) {
+    gexamplethread = g_thread_new("video receive thread",
+                                  &_receive_video_main,
+                                  &data);
+  } else {
+    GST_ERROR ("Wrong controlling = %d", controlling);
+  }
 
   g_main_loop_run (gloop);
   g_thread_join (gexamplethread);
