@@ -25,7 +25,7 @@ void* _receive_video_main (CustomData *data)
     data->context);
 
   g_mutex_lock(&negotiate_mutex);
-  while (!exit_thread && !negotiation_done) {
+  while (!negotiation_done) {
     g_cond_wait(&negotiate_cond, &negotiate_mutex);
   }
 
@@ -41,13 +41,56 @@ void* _receive_video_main (CustomData *data)
 
 void  _receive_video_init_gstreamer(NiceAgent *magent, guint stream_id, CustomData *data)
 {
-  GstElement *pipeline, *source, *sink;
+  GstElement *pipeline, *source, *capsfilter, *videoconvert, *h263p, *rtph263pdepay, *sink;
   GstBus *bus;
   GstMessage *msg;
   GstStateChangeReturn ret;
   GSource *bus_source;
 
   GST_INFO ("Pipeline initialization");
+  // TODO: figure out showing video
+
+  source = gst_element_factory_make ("nicesrc", "source");
+  //videoconvert = gst_element_factory_make ("videoconvert", "convert");
+  capsfilter = gst_element_factory_make ("capsfilter", "caps");
+  rtph263pdepay = gst_element_factory_make ("rtph263pdepay", "rtph263pdepay");
+  h263p = gst_element_factory_make ("avdec_h263p", "h263p");
+  sink = gst_element_factory_make ("autovideosink", "sink");
+
+  g_object_set (source, "agent", magent, NULL);
+  g_object_set (source, "stream", stream_id, NULL);
+  g_object_set (source, "component", 1, NULL);
+
+  g_object_set (capsfilter, "caps", gst_caps_from_string(
+    "application/x-rtp, payload=(int)96, "
+    "media=(string)video, clock-rate=(int)90000, "
+    "encoding-name=(string)H263-1998"),
+    NULL);
+
+  g_object_set (sink, "sync", FALSE, NULL);
+
+  pipeline = gst_pipeline_new ("Video receive pipeline");
+
+  if (!pipeline || !source || !capsfilter ||
+      !h263p || !rtph263pdepay || !sink)
+  {
+    g_printerr ("Not all elements could be created.\n");
+    return;
+  }
+
+  // Build the pipeline
+  gst_bin_add_many (GST_BIN (pipeline), source, capsfilter,
+            rtph263pdepay, h263p, sink, NULL);
+
+  if (gst_element_link_many (source, capsfilter,
+                rtph263pdepay, h263p, sink, NULL) != TRUE) {
+    g_printerr ("Elements could not be linked.\n");
+    gst_object_unref (pipeline);
+    return;
+  }
+
+  // TODO: this is just output dump pipeline
+  /*
   source = gst_element_factory_make ("nicesrc", "source");
   sink = gst_element_factory_make ("fakesink", "sink");
 
@@ -63,13 +106,14 @@ void  _receive_video_init_gstreamer(NiceAgent *magent, guint stream_id, CustomDa
     return;
   }
 
-  /* Build the pipeline */
+  // Build the pipeline
   gst_bin_add_many (GST_BIN (pipeline), source, sink, NULL);
   if (gst_element_link (source, sink) != TRUE) {
     g_printerr ("Elements could not be linked.\n");
     gst_object_unref (pipeline);
     return;
   }
+  */
 
   GST_INFO ("Pipeline created, registing on bus");
 

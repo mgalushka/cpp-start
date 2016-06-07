@@ -99,10 +99,10 @@ void libnice_print_local_data (NiceAgent *agent, guint stream_id, guint componen
   gchar *sdp, *sdp64;
 
   // Candidate gathering is done. Send our local candidates on stdout
-  GST_INFO ("Copy this line to remote client:");
+  GST_ERROR ("Copy this line to remote client:");
   sdp = nice_agent_generate_local_sdp (agent);
   sdp64 = g_base64_encode ((const guchar *)sdp, strlen (sdp));
-  GST_INFO ("\n  %s\n", sdp64);
+  GST_ERROR ("\n  %s\n", sdp64);
   g_free (sdp);
   g_free (sdp64);
 }
