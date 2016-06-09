@@ -58,6 +58,10 @@ You need to copy `caps` from input and pass on receiver:
 
 ```
 gst-launch-1.0 -v udpsrc address=127.0.0.1 port=5001 caps="application/x-rtp\,\ media\=\(string\)video\,\ clock-rate\=\(int\)90000\,\ encoding-name\=\(string\)H263-1998\,\ payload\=\(int\)96\,\ ssrc\=\(uint\)870888106\,\ timestamp-offset\=\(uint\)3238251667\,\ seqnum-offset\=\(uint\)8585" ! rtph263pdepay ! avdec_h263 ! autovideosink
+
+gst-launch-1.0 -v udpsrc address=127.0.0.1 port=5001 caps="application/x-rtp\,\ media\=\(string\)video\,\ clock-rate\=\(int\)90000\,\ encoding-name\=\(string\)H263-1998\,\ payload\=\(int\)96" ! rtph263pdepay ! avdec_h263 ! autovideosink
+
+gst-launch-1.0 -v udpsrc address=127.0.0.1 port=5000 caps="application/x-rtp" ! rtph263pdepay ! avdec_h263 ! autovideosink
 ```
 
 

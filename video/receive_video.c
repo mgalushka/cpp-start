@@ -2,6 +2,7 @@
 
 void* _receive_video_main (CustomData *data)
 {
+  /*
   GST_INFO ("Creating libnice agent");
   libnice_create_NiceAgent_with_gstreamer ( video_send_gathering_done, data);
   GST_INFO ("libnice agent created");
@@ -30,8 +31,9 @@ void* _receive_video_main (CustomData *data)
   }
 
   g_mutex_unlock(&negotiate_mutex);
+  */
 
-  /* Init Gstreamer */
+  // Init Gstreamer
   _receive_video_init_gstreamer(data->agent, data->stream_id, data);
 
   while(TRUE) {
@@ -50,28 +52,38 @@ void  _receive_video_init_gstreamer(NiceAgent *magent, guint stream_id, CustomDa
   GST_INFO ("Pipeline initialization");
   // TODO: figure out showing video
 
-  source = gst_element_factory_make ("nicesrc", "source");
+  source = gst_element_factory_make ("udpsrc", "source");
   //videoconvert = gst_element_factory_make ("videoconvert", "convert");
-  capsfilter = gst_element_factory_make ("capsfilter", "caps");
+  //capsfilter = gst_element_factory_make ("capsfilter", "caps");
   rtph263pdepay = gst_element_factory_make ("rtph263pdepay", "rtph263pdepay");
   h263p = gst_element_factory_make ("avdec_h263p", "h263p");
   sink = gst_element_factory_make ("autovideosink", "sink");
 
+  /*
   g_object_set (source, "agent", magent, NULL);
   g_object_set (source, "stream", stream_id, NULL);
   g_object_set (source, "component", 1, NULL);
+  */
 
-  g_object_set (capsfilter, "caps", gst_caps_from_string(
-    "application/x-rtp, payload=(int)96, "
-    "media=(string)video, clock-rate=(int)90000, "
-    "encoding-name=(string)H263-1998"),
+  g_object_set (source, "address", "127.0.0.1", NULL);
+  g_object_set (source, "port", 1234, NULL);
+
+  g_object_set (source, "caps",
+    gst_caps_from_string("application/x-rtp"), NULL);
+  /*
+  g_object_set (source, "caps", gst_caps_from_string(
+    "application/x-rtp\,\ media\=\(string\)video\,\ "
+    "clock-rate\=\(int\)90000\,\ "
+    "encoding-name\=\(string\)H263-1998\,\ "
+    "payload\=\(int\)96"),
     NULL);
+  */
 
-  g_object_set (sink, "sync", FALSE, NULL);
+  //g_object_set (sink, "sync", FALSE, NULL);
 
   pipeline = gst_pipeline_new ("Video receive pipeline");
 
-  if (!pipeline || !source || !capsfilter ||
+  if (!pipeline || !source || //!capsfilter ||
       !h263p || !rtph263pdepay || !sink)
   {
     g_printerr ("Not all elements could be created.\n");
@@ -79,10 +91,10 @@ void  _receive_video_init_gstreamer(NiceAgent *magent, guint stream_id, CustomDa
   }
 
   // Build the pipeline
-  gst_bin_add_many (GST_BIN (pipeline), source, capsfilter,
+  gst_bin_add_many (GST_BIN (pipeline), source, //capsfilter,
             rtph263pdepay, h263p, sink, NULL);
 
-  if (gst_element_link_many (source, capsfilter,
+  if (gst_element_link_many (source, //capsfilter,
                 rtph263pdepay, h263p, sink, NULL) != TRUE) {
     g_printerr ("Elements could not be linked.\n");
     gst_object_unref (pipeline);

@@ -2,6 +2,7 @@
 
 void* _send_video_main (CustomData *data)
 {
+  /*
   GST_INFO ("Creating libnice agent");
   libnice_create_NiceAgent_with_gstreamer ( video_send_gathering_done, data);
   GST_INFO ("libnice agent created");
@@ -30,8 +31,9 @@ void* _send_video_main (CustomData *data)
   }
 
   g_mutex_unlock(&negotiate_mutex);
+  */
 
-  /* Init Gstreamer */
+  // Init Gstreamer
   _send_video_init_gstreamer(data->agent, data->stream_id, data);
 
   while(TRUE) {
@@ -53,7 +55,7 @@ void  _send_video_init_gstreamer(NiceAgent *magent, guint stream_id, CustomData 
   videoconvert = gst_element_factory_make ("videoconvert", "convert");
   h263p = gst_element_factory_make ("avenc_h263p", "h263p");
   rtph263ppay = gst_element_factory_make ("rtph263ppay", "rtph263ppay");
-  sink = gst_element_factory_make ("nicesink", "sink");
+  sink = gst_element_factory_make ("udpsink", "sink");
 
   /*
   // TODO: think about passing caps
@@ -68,10 +70,15 @@ void  _send_video_init_gstreamer(NiceAgent *magent, guint stream_id, CustomData 
                 gst_caps_from_string(
                   "video/x-raw, width=320, height=240"), NULL);
 
+  /*
   g_object_set (sink, "agent", magent, NULL);
   g_object_set (sink, "stream", stream_id, NULL);
   g_object_set (sink, "component", 1, NULL);
+  */
 
+  g_object_set (sink, "sync", FALSE, NULL);
+  g_object_set (sink, "host", "127.0.0.1", NULL);
+  g_object_set (sink, "port", 1234, NULL);
 
   pipeline = gst_pipeline_new ("Video send pipeline");
   if (!pipeline || !source || !videoconvert
