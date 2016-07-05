@@ -1,2 +1,2 @@
 #!/bin/bash
-make clean && make && ./FollyExperiment.o
+make clean && make && ./FollyJson.o
