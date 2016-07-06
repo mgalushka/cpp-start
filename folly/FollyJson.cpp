@@ -25,11 +25,20 @@ void print(const folly::dynamic& arr) {
 }
 
 int main(int, char**) {
-    auto mergeFields = folly::parseJson("[]");
-    print(mergeFields);
+    try{
+      auto emptyJson = folly::parseJson("");
+    } catch (std::exception& ex) {
 
-    mergeFields = folly::parseJson("[\"some_field0\", \"some_field1\"]");
-    print(mergeFields);
+      std::cout << ex.what() << std::endl;
+    }
+    auto mergeFields = folly::parseJson("{}");
+    //print(mergeFields);
+
+    mergeFields = folly::parseJson("{\"some_field\": \"value\", \"log_type\": \"SCUBA\"}");
+    //print(mergeFields);
+
+    std::cout << "Count(some_field) = " << mergeFields.count("some_field") << std::endl;
+    std::cout << "Count(some_field0) = " << mergeFields.count("some_field0") << std::endl;
 
     return 0;
 }
