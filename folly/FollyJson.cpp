@@ -24,25 +24,26 @@ void print(const folly::dynamic& arr) {
   }
 }
 
+const std::string kCountPlaceholder  = "##LINES_COUNT##";
+
+std::string getLineWithCount(std::string originalLine, int32_t counter) {
+  // will be replacing including quotes
+  int32_t begin = originalLine.find(kCountPlaceholder) - 1;
+  if (begin < 0) {
+    return originalLine;
+  }
+
+  return originalLine.replace(begin,
+                              kCountPlaceholder.length() + 2,
+                              folly::to<std::string>(counter));
+}
+
 int main(int, char**) {
-    try{
-      auto emptyJson = folly::parseJson("");
-    } catch (std::exception& ex) {
+  std::string a("aaaaaI\"##LINES_COUNT##\"Iaaaaaaaaaaaaa");
+  std::cout << a.find_first_of(kCountPlaceholder) << std::endl;
 
-      std::cout << ex.what() << std::endl;
-    }
-    auto mergeFields = folly::parseJson("{}");
-    //print(mergeFields);
+  std::cout << "getLineWithCount = "
+            << getLineWithCount(a, 1) << std::endl;
 
-    mergeFields = folly::parseJson("{\"some_field\": \"value\", \"log_type\": \"SCUBA\"}");
-    //print(mergeFields);
-
-    std::cout << "Count(some_field) = " << mergeFields.count("some_field") << std::endl;
-    std::cout << "Count(some_field0) = " << mergeFields.count("some_field0") << std::endl;
-
-
-    std::cout << "is_string_literal = " << std::is_literal_type<std::string>::value << std::endl;
-    std::cout << "is_StringPiece_literal = " << std::is_literal_type<folly::StringPiece>::value << std::endl;
-
-    return 0;
+  return 0;
 }
