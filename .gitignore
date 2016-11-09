@@ -31,3 +31,9 @@
 *.out
 *.app
 Debug
+/video/*.user
+/video/*.sdf
+/video/*.sln
+/video/*.vcxproj
+/video/*.filters
+/video/*.suo
