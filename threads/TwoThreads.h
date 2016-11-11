@@ -1,8 +1,0 @@
-namespace threads {
-
-class Task {
-
-};
-
-
-}
