@@ -94,6 +94,14 @@ void by_value_temp_move_rvo() {
   B b4(S(std::string("Super cool")));
 }
 
+void some_method_by_reference(const A& ref) {
+  std::cout << ref.s_.s_ << std::endl;
+}
+
+void some_method_by_reference(const B& ref) {
+  std::cout << ref.s_.s_ << std::endl;
+}
+
 int main () {
 
   by_reference();
@@ -104,11 +112,17 @@ int main () {
 
   by_value_move();
   std::cout << std::endl;
-  
+
   by_value_temp_move();
   std::cout << std::endl;
 
   by_value_temp_move_rvo();
+  std::cout << std::endl;
+
+  some_method_by_reference(A(S(std::string("cool string"))));
+  std::cout << std::endl;
+
+  some_method_by_reference(B(S(std::string("cool string"))));
   std::cout << std::endl;
 
   return 0;
