@@ -4,14 +4,12 @@ CC=g++
 GTEST=~/Documents/projects/googletest/googletest
 GTEST_INCLUDE=${GTEST}/include
 
-all: CopyFolly.o
+all: CopiesAndMoves.o
 
-# -stdlib=libc++
-
-CopyFolly.o:
+CopiesAndMoves.o:
 	${CC} -v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++11 \
-	-L${GLOG_LIB} -lglog CopyFolly.cpp \
-	-o CopyFolly.o ${GTEST}/make/gtest_main.a
+	-L${GLOG_LIB} -lglog CopiesAndMoves.cpp \
+	-o CopiesAndMoves.o ${GTEST}/make/gtest_main.a
 
 clean:
-	rm -f CopyFolly.o
+	rm -f CopiesAndMoves.o

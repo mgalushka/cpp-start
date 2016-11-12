@@ -16,14 +16,14 @@ DOUBLE_CONVERSION_LIB=/usr/local/Cellar/double-conversion/1.1.5/lib/libdouble-co
 DEPS=FollyExperiment.h
 GTEST_INCLUDE=${GTEST}/include
 
-all: FollyExperiment.o FollyJson.o CopyFolly.o
+all: FollyExperiment.o FollyJson.o CopiesAndMoves.o
 
 # -stdlib=libc++
 
-CopyFolly.o:
+CopiesAndMoves.o:
 	${CC} -undefined dynamic_lookup -O1 -fsanitize=address -fno-omit-frame-pointer -v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -stdlib=libc++ -std=c++11 \
-	-L${GLOG_LIB} -lglog CopyFolly.cpp \
-	-o CopyFolly.o ${GTEST}/make/gtest_main.a ${FOLLY_LIB} ${DOUBLE_CONVERSION_LIB}
+	-L${GLOG_LIB} -lglog CopiesAndMoves.cpp \
+	-o CopiesAndMoves.o ${GTEST}/make/gtest_main.a ${FOLLY_LIB} ${DOUBLE_CONVERSION_LIB}
 
 FollyJson.o:
 	${CC} -undefined dynamic_lookup -O1 -fsanitize=address -fno-omit-frame-pointer -v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++11 \
@@ -38,4 +38,4 @@ FollyExperiment.o:
 clean:
 	rm -f FollyExperiment.o
 	rm -f FollyJson.o
-	rm -f CopyFolly.o
+	rm -f CopiesAndMoves.o

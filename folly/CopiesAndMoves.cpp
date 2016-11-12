@@ -2,15 +2,15 @@
 #include <iostream>
 #include <vector>
 
-/* stuct to track constructors */
+/* struct to track constructors */
 struct S {
   std::string s_;
 
-  S (std::string const &s) : s_(s) {
+  S (const std::string &s) : s_(s) {
     std::cout << "  S::<constructor> for: " << s << std::endl;
   }
 
-  S (S const &s) : s_(s.s_) {
+  S (const S &s) : s_(s.s_) {
     std::cout << "  S::<copy constructor> for: " << s.s_ << std::endl;
   }
 
@@ -24,7 +24,6 @@ struct S {
 
 };
 
-
 /* construct by reference */
 struct A {
   S s_;
@@ -34,7 +33,7 @@ struct A {
     std::cout << "  A::<constructor>" << std::endl;
   }
 
-  A (A const &a) : s_(a.s_) {
+  A (const A &a) : s_(a.s_) {
     std::cout << "A::<copy constructor>" << std::endl;
   }
 
@@ -44,7 +43,7 @@ struct A {
 
 };
 
- /* construct by value */
+/* construct by value */
 struct B{
   S s_;
 
@@ -53,7 +52,7 @@ struct B{
     std::cout << "  B::<constructor>" << std::endl;
   }
 
-  B (B const &b) : s_ (b.s_){
+  B (const B &b) : s_ (b.s_){
     std::cout << "  B::<copy constructor>" << std::endl;
   }
 
@@ -105,7 +104,7 @@ void some_method_by_reference(const B& ref) {
 
 // shows that we can safely move on iteration into another vector
 // with emplace_back
-void emplace_vector() {
+void emplace_into_vector() {
   std::vector<B> bs;
   std::vector<std::string> iter = {"a", "b", "c"};
   std::cout << "Emplace back movable into vector" << std::endl;
@@ -141,7 +140,7 @@ int main () {
   some_method_by_reference(B(S(std::string("cool string"))));
   std::cout << std::endl;
 
-  emplace_vector();
+  emplace_into_vector();
   std::cout << std::endl;
 
   return 0;
