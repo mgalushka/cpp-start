@@ -1,26 +1,26 @@
+CC=clang
+
 # static compile with google test library
-CC=g++
 GTEST=~/Documents/projects/googletest/googletest
 GLOG_LIB=/usr/local/lib
 
-DEPS=Common.h
+CLANG_OPTIONS=""
+
+FOLLY_VERSION=2016.09.05.00_1
+FOLLY_LIB=/usr/local/Cellar/folly/${FOLLY_VERSION}/lib/libfolly.a
+DOUBLE_CONVERSION_LIB=/usr/local/Cellar/double-conversion/1.1.5/lib/libdouble-conversion.a
+
+DEPS=FollyExperiment.h
 GTEST_INCLUDE=${GTEST}/include
 
-all: DoNothing.o DoMap.o DoVector.o
+all: RunThreads.o
 
-DoNothing.o:
-	${CC} -v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++11 \
-	-iquote ${DEPS} DoNothing.cpp -o DoNothing.o ${GTEST}/make/gtest_main.a
+# -stdlib=libc++
 
-DoMap.o:
-	${CC} -v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++11 \
-	-iquote ${DEPS} DoMap.cpp -o DoMap.o ${GTEST}/make/gtest_main.a
-
-DoVector.o:
-	${CC} -v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++11 \
-	-iquote ${DEPS} DoVector.cpp -o DoVector.o ${GTEST}/make/gtest_main.a
+RunThreads.o:
+	${CC} -undefined dynamic_lookup -O1 -fsanitize=address -fno-omit-frame-pointer -v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -stdlib=libc++ -std=c++11 \
+	-L${GLOG_LIB} -lglog RunThreads.cpp \
+	-o RunThreads.o ${GTEST}/make/gtest_main.a ${FOLLY_LIB} ${DOUBLE_CONVERSION_LIB}
 
 clean:
-	rm -f DoNothing.o
-	rm -f DoMap.o
-	rm -f DoVector.o
+	rm -f RunThreads.o
