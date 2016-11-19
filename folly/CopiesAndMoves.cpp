@@ -117,6 +117,15 @@ void emplace_into_vector() {
   }
 }
 
+void process_object(const B& b) {
+  std::cout << b.s_.s_ << std::endl;
+}
+
+S get_string() {
+  S s("Local string");
+  return s;
+}
+
 int main () {
 
   by_reference();
@@ -141,6 +150,9 @@ int main () {
   std::cout << std::endl;
 
   emplace_into_vector();
+  std::cout << std::endl;
+
+  process_object(B(get_string()));
   std::cout << std::endl;
 
   return 0;
