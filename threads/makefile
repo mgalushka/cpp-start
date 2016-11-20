@@ -1,4 +1,4 @@
-CC=clang
+CC=g++
 
 # static compile with google test library
 GTEST=~/Documents/projects/googletest/googletest
@@ -18,9 +18,8 @@ all: RunThreads.o
 # -stdlib=libc++
 
 RunThreads.o:
-	${CC} -undefined dynamic_lookup -O1 -fsanitize=address -fno-omit-frame-pointer -v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -stdlib=libc++ -std=c++11 \
-	-L${GLOG_LIB} -lglog RunThreads.cpp \
-	-o RunThreads.o ${GTEST}/make/gtest_main.a ${FOLLY_LIB} ${DOUBLE_CONVERSION_LIB}
+	${CC} -v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++11 RunThreads.cpp \
+	-o RunThreads.o ${GTEST}/make/gtest_main.a
 
 clean:
 	rm -f RunThreads.o
