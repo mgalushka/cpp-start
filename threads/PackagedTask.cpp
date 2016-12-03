@@ -27,7 +27,7 @@ int main() {
   std::thread t1(second, std::ref(task), 100);
   std::this_thread::sleep_for(300ms);
 
-  std::cout << "Scuare result: " << fut.get() << std::endl;
+  std::cout << "Square result: " << fut.get() << std::endl;
 
   t1.join();
   return 0;
