@@ -5,10 +5,8 @@
 #include <thread>
 #include <vector>
 
-/// want to pass task from 1 tread to another
-std::promise<int32_t> prom;
-
-
+/// want to pass task from 1 thead to be executed in another thread and
+/// future on current thread is able to get its execution results
 void second(std::packaged_task<int32_t(int32_t)>& task, int32_t x) {
   std::cout << "Thread 2" << std::endl;
   task(x);
