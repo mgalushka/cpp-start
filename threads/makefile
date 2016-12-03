@@ -13,13 +13,23 @@ DOUBLE_CONVERSION_LIB=/usr/local/Cellar/double-conversion/1.1.5/lib/libdouble-co
 DEPS=FollyExperiment.h
 GTEST_INCLUDE=${GTEST}/include
 
-all: RunThreads.o
+all: RunThreads.o Promises.o
 
 # -stdlib=libc++
 
 RunThreads.o:
-	${CC} -v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++11 RunThreads.cpp \
-	-o RunThreads.o ${GTEST}/make/gtest_main.a
+	${CC} -undefined dynamic_lookup -O1 -fsanitize=address -fno-omit-frame-pointer \
+	-v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -stdlib=libc++ -std=c++14 \
+	-L${GLOG_LIB} -lglog RunThreads.cpp \
+	-o RunThreads.o ${GTEST}/make/gtest_main.a ${FOLLY_LIB} ${DOUBLE_CONVERSION_LIB}
+
+
+Promises.o:
+	${CC} -undefined dynamic_lookup -O1 -fsanitize=address -fno-omit-frame-pointer \
+	-v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -stdlib=libc++ -std=c++14 \
+	-L${GLOG_LIB} -lglog Promises.cpp \
+	-o Promises.o ${GTEST}/make/gtest_main.a ${FOLLY_LIB} ${DOUBLE_CONVERSION_LIB}
 
 clean:
 	rm -f RunThreads.o
+	rm -f Promises.o
