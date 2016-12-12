@@ -22,10 +22,9 @@ AR=ar
 AWK=awk
 
 
-PROGS =	deadlock mandatory mcopy2 nonblockw rot13a
-MOREPROGS = rot13c2
+PROGS =	ls
 
-all:	$(PROGS) $(MOREPROGS)
+all:	$(PROGS)
 
 %:	%.c $(LIBAPUE)
 	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS) $(LDLIBS)
