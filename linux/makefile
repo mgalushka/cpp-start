@@ -10,6 +10,8 @@ ROOT=.
 
 EXTRALIBS=-lrt
 
+DEPS=apue.h
+
 CC=gcc
 COMPILE.c=$(CC) $(CFLAGS) $(CPPFLAGS) -c
 LINK.c=$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
@@ -27,7 +29,7 @@ PROGS =	ls
 all:	$(PROGS)
 
 %:	%.c $(LIBAPUE)
-	$(CC) $(CFLAGS) $@.c -o $@ $(LDFLAGS) $(LDLIBS)
+	$(CC) $(CFLAGS) -iquote ${DEPS} $@.c -o $@ $(LDFLAGS) $(LDLIBS)
 
 clean:
 	rm -f $(PROGS) $(MOREPROGS) $(TEMPFILES) *.o xlate rot13c2.c
