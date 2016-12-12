@@ -17,7 +17,7 @@ COMPILE.c=$(CC) $(CFLAGS) $(CPPFLAGS) -c
 LINK.c=$(CC) $(CFLAGS) $(CPPFLAGS) $(LDFLAGS)
 LDFLAGS=
 LDDIR=-L$(ROOT)/lib
-LDLIBS=$(LDDIR) -lapue $(EXTRALIBS)
+LDLIBS=$(LDDIR) $(EXTRALIBS)
 CFLAGS=-ansi -I$(ROOT)/include -Wall -DLINUX -D_GNU_SOURCE $(EXTRA)
 RANLIB=echo
 AR=ar
@@ -29,7 +29,7 @@ PROGS =	ls
 all:	$(PROGS)
 
 %:	%.c $(LIBAPUE)
-	$(CC) $(CFLAGS) -I ${DEPS} $@.c -o $@ $(LDFLAGS) $(LDLIBS)
+	$(CC) $(CFLAGS) $@.c -o $@.o $(LDFLAGS) $(LDLIBS)
 
 clean:
 	rm -f $(PROGS) $(MOREPROGS) $(TEMPFILES) *.o xlate rot13c2.c
