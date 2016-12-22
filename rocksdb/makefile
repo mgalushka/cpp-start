@@ -1,0 +1,46 @@
+CC=cc
+CXX=g++
+PLATFORM=OS_MACOSX
+PLATFORM_LDFLAGS= -lsnappy -lgflags -lz -lbz2 -llz4 -ljemalloc
+JAVA_LDFLAGS= -lsnappy -lz -lbz2 -llz4 -ljemalloc
+JAVA_STATIC_LDFLAGS=
+VALGRIND_VER=
+PLATFORM_CCFLAGS= -DROCKSDB_PLATFORM_POSIX -DROCKSDB_LIB_IO_POSIX  -DOS_MACOSX -DSNAPPY -DGFLAGS=gflags -DZLIB -DBZIP2 -DLZ4 -DROCKSDB_BACKTRACE -Wshorten-64-to-32 -march=native
+PLATFORM_CXXFLAGS=-std=c++11  -DROCKSDB_PLATFORM_POSIX -DROCKSDB_LIB_IO_POSIX  -DOS_MACOSX -DSNAPPY -DGFLAGS=gflags -DZLIB -DBZIP2 -DLZ4 -DROCKSDB_BACKTRACE -Wshorten-64-to-32 -march=native
+PLATFORM_SHARED_CFLAGS=-fPIC
+PLATFORM_SHARED_EXT=dylib
+PLATFORM_SHARED_LDFLAGS=-dynamiclib -install_name
+PLATFORM_SHARED_VERSIONED=true
+JEMALLOC_INCLUDE=
+JEMALLOC_LIB=
+ROCKSDB_MAJOR=4
+ROCKSDB_MINOR=13
+ROCKSDB_PATCH=2
+CLANG_SCAN_BUILD=scan-build
+CLANG_ANALYZER=/usr/bin/clang++
+PROFILING_FLAGS=-pg
+JEMALLOC=1
+
+PLATFORM_CXXFLAGS += "-DROCKSDB_JEMALLOC"
+EXEC_LDFLAGS := $(JEMALLOC_LIB) $(EXEC_LDFLAGS) -lpthread
+PLATFORM_CXXFLAGS += $(JEMALLOC_INCLUDE)
+
+ROCKSDB_HOME := $(HOME)/Documents/projects/rocksdb
+
+.PHONY: clean librocksdb
+
+all: SimpleRocks
+
+SimpleRocks: librocksdb SimpleRocks.cpp
+	$(CXX) $(CXXFLAGS) $@.cpp -o$@.o ${ROCKSDB_HOME}/librocksdb.a \
+	-I${ROCKSDB_HOME}/include -O2 -std=c++11 $(PLATFORM_LDFLAGS) \
+	$(PLATFORM_CXXFLAGS) $(EXEC_LDFLAGS)
+
+.c.o:
+	$(CC) $(CFLAGS) -c $< -o $@ -I${ROCKSDB_HOME}/include
+
+clean:
+	rm -rf ./SimpleRocks.o
+
+librocksdb:
+	cd ${ROCKSDB_HOME} && $(MAKE) static_lib
