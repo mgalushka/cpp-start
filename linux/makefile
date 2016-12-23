@@ -20,7 +20,7 @@ RANLIB=echo
 AR=ar
 AWK=awk
 
-PROGS =	ls echo
+PROGS =	ls echo mypid
 
 DEPS = $(headers)
 
