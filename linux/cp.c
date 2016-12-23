@@ -1,4 +1,5 @@
-#include "apue.h"
+#include "common.h"
+
 #define BUFFSIZE 4096
 
 int main(void) {
