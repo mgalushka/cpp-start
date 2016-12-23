@@ -2,6 +2,11 @@
 
 #define BUFFSIZE 4096
 
+void err_sys(const char* x) {
+    perror(x);
+    exit(1);
+}
+
 int main(void) {
     int n;
     char buf[BUFFSIZE];

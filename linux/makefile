@@ -20,12 +20,14 @@ RANLIB=echo
 AR=ar
 AWK=awk
 
-PROGS =	ls cp
+PROGS =	ls echo
+
+DEPS = $(headers)
 
 all:	$(PROGS)
 
-%:	%.c ${headers}
-	$(CC) $(CFLAGS) $@.c -o $@.o $(LDFLAGS)
+%:	%.c $(DEPS)
+	$(CC) $(CFLAGS) -iquote $(DEPS) $@.c -o $@.o $(LDFLAGS)
 
 clean:
 	rm -f *.o
