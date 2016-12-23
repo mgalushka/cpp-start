@@ -8,6 +8,7 @@ main(int argc, char *argv[])
 
   if (argc != 2) {
     puts("usage: ls directory_name");
+    exit(1);
   }
 
   if ((dp = opendir(argv[1])) == NULL) {
