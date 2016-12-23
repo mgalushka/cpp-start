@@ -11,7 +11,9 @@ int main(int argc, char *argv[]) {
   }
 
   if ((dp = opendir(argv[1])) == NULL) {
-    printf("can’t open %s", argv[1]);
+    char* error_message = (char*) malloc(7 * sizeof(char) + sizeof(argv[1]));
+    sprintf(error_message, "can’t open %s", argv[1]);
+    err_sys(error_message);
   }
 
   while ((dirp = readdir(dp)) != NULL) {
