@@ -24,7 +24,7 @@ AR=ar
 AWK=awk
 
 
-PROGS =	ls
+PROGS =	ls cp
 
 all:	$(PROGS)
 
