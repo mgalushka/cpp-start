@@ -26,6 +26,9 @@
 *.a
 *.lib
 
+# java
+*.class
+
 # Executables
 *.exe
 *.out
