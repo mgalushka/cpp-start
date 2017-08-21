@@ -75,6 +75,8 @@ bool stringFormatTimestamp(time_t t, const char* format, std::string* str) {
 int main(int, char**) {
   //using namespace std::chrono_literals;
 
+  /*
+
   std::string a("aaaaaI\"##LINES_COUNT##\"Iaaaaaaaaaaaaa");
   std::cout << a.find_first_of(kCountPlaceholder) << std::endl;
 
@@ -141,6 +143,21 @@ int main(int, char**) {
 
   std::cout << std::is_move_constructible<folly::dynamic>::value << std::endl;
   std::cout << std::is_move_assignable<folly::dynamic>::value << std::endl;
+  */
+
+  std::string jsss = "{\"items\":[{\"z\":5},{\"a\":1},{\"d\":17}]}";
+  std::cout << jsss << std::endl;
+
+  auto dyn = folly::parseJson(jsss);
+  for (const auto& item : dyn["items"]) {
+    const auto& key = *item.keys().begin();
+    std::cout << key.asString() << std::endl;
+  }
+  std::cout << folly::toJson(dyn) << std::endl;
+
+  auto qos = "uniform";
+
+
 
  return 0;
 }

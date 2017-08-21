@@ -19,7 +19,7 @@ struct S {
   }
 
   ~S () {
-    std::cout << "  S::<destructor>" << std::endl;
+    std::cout << "  S::<destructor> for " << s_ << std::endl;
   }
 
 };
@@ -121,6 +121,11 @@ void process_object(const B& b) {
   std::cout << b.s_.s_ << std::endl;
 }
 
+bool return_smth(const S& a) {
+  std::cout << "Inside: " << a.s_ << std::endl;
+  return true;
+}
+
 S get_string() {
   S s("Local string");
   return s;
@@ -154,6 +159,12 @@ int main () {
 
   process_object(B(get_string()));
   std::cout << std::endl;
+
+
+  std::cout << std::endl;
+  if (return_smth(S(std::string("a"))) && return_smth(S(std::string("b")))) {
+    std::cout << "" << std::endl;
+  }
 
   return 0;
 }
