@@ -14,10 +14,12 @@ FOLLY_VERSION=2017.08.21.00
 FOLLY_LIB=/usr/local/Cellar/folly/${FOLLY_VERSION}/lib/libfolly.a
 DOUBLE_CONVERSION_LIB=/usr/local/Cellar/double-conversion/1.1.5/lib/libdouble-conversion.a
 
+BOOST_INCLUDE=/usr/local/Cellar/boost/1.65.0/include/
+
 DEPS=FollyExperiment.h
 GTEST_INCLUDE=${GTEST}/include
 
-all: FollyExperiment.o FollyJson.o CopiesAndMoves.o values.o
+all: FollyExperiment.o FollyJson.o CopiesAndMoves.o values.o division.o
 
 # -stdlib=libc++
 
@@ -31,6 +33,14 @@ values.o:
 	-v -g -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++14 \
 	-L${GLOG_LIB} -lglog values.cpp \
 	-o values.o ${GTEST}/make/gtest_main.a ${FOLLY_LIB} ${DOUBLE_CONVERSION_LIB}
+
+# -iquote ${BOOST_INCLUDE}
+division.o:
+	${CC} -undefined dynamic_lookup -O1 -fsanitize=address -fno-omit-frame-pointer \
+	-v -g -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++14 \
+	-L${GLOG_LIB} -lglog -iquote ${BOOST_INCLUDE} division.cpp \
+	-o division.o ${GTEST}/make/gtest_main.a ${FOLLY_LIB} ${DOUBLE_CONVERSION_LIB}
+
 
 FollyJson.o:
 	${CC} -undefined dynamic_lookup -O1 -fsanitize=address -fno-omit-frame-pointer -v -Wall -Wextra -Wshadow -Wnon-virtual-dtor -pedantic -std=c++11 \
@@ -47,3 +57,4 @@ clean:
 	rm -f FollyJson.o
 	rm -f CopiesAndMoves.o
 	rm -f values.o
+	rm -f division.o
