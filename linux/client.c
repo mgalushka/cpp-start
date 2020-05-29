@@ -2,6 +2,10 @@
 #include <sys/socket.h>
 #include <arpa/inet.h> 
 
+#if !defined(MSG_DONTWAIT)
+#define	MSG_DONTWAIT	0x80
+#endif
+
 int main(int argc, char const *argv[]) { 
   if (argc != 5) {
     puts("usage: client --host [HOST] --port [PORT]");
@@ -45,11 +49,12 @@ int main(int argc, char const *argv[]) {
 	if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) { 
 		printf("\nConnection Failed \n"); 
 		return -1; 
-	} 
-	send(sock, hello, strlen(hello), 0 ); 
-	printf("Hello message sent\n"); 
-	valread = read(sock, buffer, 1024); 
-	printf("%s\n", buffer); 
+	}
+  
+	write(sock, hello, strlen(hello));
+	printf("Hello message sent\n");
+	valread = read(sock, buffer, 1024);
+	printf("Received: %s\n", buffer);
   
 	return 0; 
 } 

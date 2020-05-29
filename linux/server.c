@@ -1,8 +1,15 @@
 #include "common.h"
+#include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h> 
 
-#define TRUE 1
+#if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
+#define	MSG_DONTWAIT	0x80
+#endif
+
+#define TRUE  1
+
+#define BUF_SIZE  1024
 
 int main(int argc, char const *argv[]) { 
   
@@ -23,7 +30,6 @@ int main(int argc, char const *argv[]) {
   struct sockaddr_in address; 
 	int opt = 1; 
 	int addrlen = sizeof(address); 
-	char buffer[1024] = {0}; 
 	char *hello = "Hello from server";  
 	
 	if (setsockopt(
@@ -38,7 +44,7 @@ int main(int argc, char const *argv[]) {
 	
 	// Attaching socket 
 	if (bind(
-      server_fd, (struct sockaddr *)&address, sizeof(address))<0
+      server_fd, (struct sockaddr *)&address, sizeof(address)) < 0
     ) { 
 		perror("bind failed"); 
 		exit(EXIT_FAILURE); 
@@ -47,13 +53,24 @@ int main(int argc, char const *argv[]) {
 		perror("listen"); 
 		exit(EXIT_FAILURE); 
 	} 
-	if ((new_socket = accept(server_fd, (struct sockaddr *)&address, 
-					(socklen_t*)&addrlen)) < 0) { 
-		perror("accept"); 
-		exit(EXIT_FAILURE); 
-	} 
+  
+  char buffer[BUF_SIZE] = {0}; 
   while (TRUE) {
-    valread = read(new_socket, buffer, 1024); 
+    if ((new_socket = accept(server_fd, (struct sockaddr *)&address, 
+    				(socklen_t*)&addrlen)) < 0) { 
+    	perror("accept"); 
+    	exit(EXIT_FAILURE); 
+    }
+    
+    int nread = recvfrom(
+      new_socket, buffer, BUF_SIZE, 0, (struct sockaddr *) &address, &addrlen
+    );
+    
+    if (nread == -1) {
+      continue;
+    }
+
+    printf("Read %lu bytes\n", strlen(buffer));
     printf("%s\n", buffer); 
     
     char *separator = " >> ";
