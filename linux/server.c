@@ -2,6 +2,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h> 
 
+#define TRUE 1
+
 int main(int argc, char const *argv[]) { 
   
   if (argc != 3) {
@@ -11,17 +13,18 @@ int main(int argc, char const *argv[]) {
   int port = atoi(argv[2]);
   
 	int server_fd, new_socket, valread; 
-	struct sockaddr_in address; 
-	int opt = 1; 
-	int addrlen = sizeof(address); 
-	char buffer[1024] = {0}; 
-	char *hello = "Hello from server"; 
 	
 	// Creating socket file descriptor 
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) { 
 		perror("socket failed"); 
 		exit(EXIT_FAILURE); 
-	} 
+	}
+  
+  struct sockaddr_in address; 
+	int opt = 1; 
+	int addrlen = sizeof(address); 
+	char buffer[1024] = {0}; 
+	char *hello = "Hello from server";  
 	
 	if (setsockopt(
       server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)
@@ -49,9 +52,18 @@ int main(int argc, char const *argv[]) {
 		perror("accept"); 
 		exit(EXIT_FAILURE); 
 	} 
-	valread = read( new_socket , buffer, 1024); 
-	printf("%s\n",buffer ); 
-	send(new_socket , hello , strlen(hello) , 0 ); 
-	printf("Hello message sent\n"); 
+  while (TRUE) {
+    valread = read(new_socket, buffer, 1024); 
+    printf("%s\n", buffer); 
+    
+    char *separator = " >> ";
+    int totalLength = strlen(buffer) + strlen(separator) + strlen(hello);
+    char *new_message = (char *) malloc(totalLength * sizeof(char));
+    strcat(new_message, hello);
+    strcat(new_message, separator);
+    strcat(new_message, buffer);
+    send(new_socket, new_message, strlen(new_message), 0); 
+    printf("Hello message sent\n"); 
+  }
 	return 0; 
 } 
