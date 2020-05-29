@@ -1,6 +1,9 @@
 # Intellij IDEA files
 .idea
 
+# MacOS
+.DS_Store
+
 # Compiled Object files
 *.slo
 *.lo
