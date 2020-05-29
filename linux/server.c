@@ -63,7 +63,7 @@ int main(int argc, char const *argv[]) {
     strcat(new_message, separator);
     strcat(new_message, buffer);
     send(new_socket, new_message, strlen(new_message), 0); 
-    printf("Hello message sent\n"); 
+    printf("Message sent to client: %s\n", new_message); 
   }
 	return 0; 
 } 
