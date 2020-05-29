@@ -33,7 +33,7 @@ int main(int argc, char const *argv[]) {
 	address.sin_addr.s_addr = INADDR_ANY; 
 	address.sin_port = htons( port ); 
 	
-	// Forcefully attaching socket to the port 8080 
+	// Attaching socket 
 	if (bind(
       server_fd, (struct sockaddr *)&address, sizeof(address))<0
     ) { 
