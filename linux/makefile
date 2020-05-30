@@ -20,7 +20,7 @@ RANLIB=echo
 AR=ar
 AWK=awk
 
-PROGS =	ls echo mypid env server client realloc
+PROGS =	ls echo mypid env server client realloc dfs
 
 DEPS = $(headers)
 
