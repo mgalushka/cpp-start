@@ -27,7 +27,7 @@ DEPS = $(headers)
 all:	$(PROGS)
 
 %:	%.c $(DEPS)
-	$(CC) $(CFLAGS) -iquote $(DEPS) $@.c -o $@.o $(LDFLAGS)
+	$(CC) $(CFLAGS) $@.c -iquote $(DEPS) -o $@.o $(LDFLAGS)
 
 clean:
 	rm -f *.o
