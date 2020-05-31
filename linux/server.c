@@ -19,7 +19,7 @@ int main(int argc, char const *argv[]) {
   struct sockaddr_in address;
 	int opt = 1;
 	int addrlen = sizeof(address);
-	char *hello = "Hello from server";
+	char *hello = "Hello";
 
 	if (setsockopt(
       server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)
@@ -54,19 +54,18 @@ int main(int argc, char const *argv[]) {
     ssize_t total_read_size = socket_recv(new_socket, &buffer, 0);
 
     if (total_read_size == 0) {
+      DEBUG printf("total_read_size == 0, continue to next client!\n");
       continue;
     }
 
-    char *separator = " >> ";
-    int totalLength = strlen(buffer) + strlen(separator) + strlen(hello) + 1;
+    int totalLength = strlen(hello) + strlen(buffer) + 1;
     DEBUG printf("Total allocated size: %d\n", totalLength);
+    DEBUG printf("Allocated size is strlen(hello) = %lu; strlen(buffer) = %lu; and 1\n", strlen(hello), strlen(buffer));
     char *new_message = (char *) malloc(totalLength * sizeof(char));
-    // new_message = "";
     strcat(new_message, hello);
-    strcat(new_message, separator);
     strcat(new_message, buffer);
     socket_send(new_socket, new_message, strlen(new_message), 0);
-    printf("Message sent to client: %s\n", new_message);
+    printf("Message sent to client (%ld): %s\n", strlen(new_message), new_message);
 
     // cleanup buffer
     free(buffer);

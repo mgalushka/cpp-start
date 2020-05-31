@@ -66,11 +66,11 @@ ssize_t socket_send(int sockfd, void *buffer, size_t len, int flag) {
       to_send = max_to_send;
     }
     sent_now = send(sockfd, buffer + sent_total, to_send, flag);
-    DEBUG printf("Send buffer: %d, bytes sent: %d\n", count++, sent_now);
+    DEBUG printf("socket_send send buffer: #%d, bytes sent in this iteration: %d.\n", count++, sent_now);
     if (sent_now == -1) break;
   }
   if (sent_total != len) {
-    DEBUG printf("Send requested = %zu, sent = %zu", len, sent_total);
+    DEBUG printf("socket_send send requested = %zu, sent = %zu\n", len, sent_total);
   }
   return sent_total;
 }
@@ -81,20 +81,22 @@ ssize_t socket_recv(int sockfd, char **buffer, int flag) {
   }
   ssize_t total_read_size = 0;
   ssize_t nread = 0;
-  ssize_t buffer_default_size = BUF_SIZE * sizeof(char) + 1;
-  *buffer = (char *) malloc(buffer_default_size);
+  ssize_t buffer_default_size = BUF_SIZE * sizeof(char);
+  *buffer = (char *) malloc(buffer_default_size + sizeof(char));
+  int iteration = 0;
   while (nread >= 0) {
-    if (total_read_size > buffer_default_size) {
-      *buffer = (char *) realloc(*buffer, total_read_size + buffer_default_size);
+    if (total_read_size > 0) {
+      *buffer = (char *) realloc(*buffer, total_read_size + buffer_default_size + sizeof(char));
     }
     nread = recv(sockfd, *buffer + total_read_size, BUF_SIZE, flag);
+    DEBUG printf("socket_recv iteration #%d, nread = %zd\n", iteration++, nread);
     total_read_size += nread;
     DEBUG printf(
-      "Read %ld bytes from socket\n Total bytes read so far: %ld\n",
+      "Read %ld bytes from socket.\nTotal bytes read so far: %ld.\n",
       nread,
       total_read_size
     );
-    DEBUG printf("Buffer: %s\n", *buffer);
+    DEBUG printf("socket_recv buffer (%lu): %s\n\n\n", strlen(*buffer), *buffer);
 
     // TODO: this is hack.
     // In real server we need to implement some kind of a END MESSAGE
@@ -103,6 +105,12 @@ ssize_t socket_recv(int sockfd, char **buffer, int flag) {
       break;
     }
   }
+
+  char *str_result = (char *) malloc(total_read_size + sizeof(char));
+  strncpy(str_result, *buffer, total_read_size);
+  str_result[total_read_size] = '\0';
+  DEBUG printf("End of socket_recv iteration, total_read_size = %ld\n", total_read_size);
+  DEBUG printf("socket_recv string output result (%lu): %s\n\n\n", strlen(str_result), str_result);
 
   return total_read_size;
 }
