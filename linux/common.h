@@ -26,7 +26,7 @@
 #define TRUE    1
 #define FALSE   0
 
-#define DEBUG if(FALSE)
+#define DEBUG if(TRUE)
 
 #define	MAXLINE	4096			/* max line length */
 
