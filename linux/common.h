@@ -79,11 +79,9 @@ ssize_t socket_recv(int sockfd, char **buffer, int flag) {
   ssize_t total_read_size = 0;
   ssize_t nread = 0;
   ssize_t buffer_default_size = BUF_SIZE * sizeof(char) + 1;
-  *buffer = NULL;
+  *buffer = (char *) malloc(buffer_default_size);
   while (nread >= 0) {
-    if (*buffer == NULL) {
-      *buffer = (char *) malloc(buffer_default_size);
-    } else {
+    if (total_read_size > buffer_default_size) {
       *buffer = (char *) realloc(*buffer, total_read_size + buffer_default_size);
     }
     nread = recv(sockfd, *buffer + total_read_size, BUF_SIZE, flag);

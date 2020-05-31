@@ -59,7 +59,7 @@ int main(int argc, char const *argv[]) {
 
     char *separator = " >> ";
     int totalLength = strlen(buffer) + strlen(separator) + strlen(hello) + 1;
-    DEBUG printf("Total allocated size: %d", totalLength);
+    DEBUG printf("Total allocated size: %d\n", totalLength);
     char *new_message = (char *) malloc(totalLength * sizeof(char));
     // new_message = "";
     strcat(new_message, hello);
