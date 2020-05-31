@@ -78,7 +78,7 @@ ssize_t socket_send(int sockfd, void *buffer, size_t len, int flag) {
 ssize_t socket_recv(int sockfd, char **buffer, int flag) {
   ssize_t total_read_size = 0;
   ssize_t nread = 0;
-  ssize_t buffer_default_size = BUF_SIZE * sizeof(char);
+  ssize_t buffer_default_size = BUF_SIZE * sizeof(char) + 1;
 
   while (nread >= 0) {
     if (buffer == NULL) {
