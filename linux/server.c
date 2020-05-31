@@ -1,9 +1,5 @@
 #include "common.h"
 
-#if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
-#define	MSG_DONTWAIT	0x80
-#endif
-
 int main(int argc, char const *argv[]) {
 
   if (argc != 3) {
