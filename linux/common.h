@@ -59,11 +59,10 @@ void err_sys(const char* x) {
 ssize_t socket_send(int sockfd, void *buffer, size_t len, int flag) {
   ssize_t sent_total = 0;
   int count = 0;
-  int max_to_send = 1024;
   for (int sent_now = 0; sent_total != len; sent_total += sent_now) {
     int to_send = len - sent_total;
-    if (to_send > max_to_send) {
-      to_send = max_to_send;
+    if (to_send > BUF_SIZE) {
+      to_send = BUF_SIZE;
     }
     sent_now = send(sockfd, buffer + sent_total, to_send, flag);
     DEBUG printf("socket_send send buffer: #%d, bytes sent in this iteration: %d.\n", count++, sent_now);
