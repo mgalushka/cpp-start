@@ -75,7 +75,12 @@ ssize_t socket_send(int sockfd, void *buffer, size_t len, int flag) {
   return sent_total;
 }
 
-ssize_t socket_recv(int sockfd, char **buffer, int flag) {
+/**
+ * Reading all socket data into buffer via 1024 bytes chunks
+ * reallocates buffer if there is not enough size in it.
+ * Buffer will contain \0 at the end of C string
+ */
+char * socket_recv(int sockfd, char **buffer, int flag) {
   if (!buffer) {
     return 0;
   }
@@ -112,7 +117,7 @@ ssize_t socket_recv(int sockfd, char **buffer, int flag) {
   DEBUG printf("End of socket_recv iteration, total_read_size = %ld\n", total_read_size);
   DEBUG printf("socket_recv string output result (%lu): %s\n\n\n", strlen(str_result), str_result);
 
-  return total_read_size;
+  return str_result;
 }
 
 #endif

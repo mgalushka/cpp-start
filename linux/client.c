@@ -55,11 +55,11 @@ int main(int argc, char const *argv[]) {
 	printf("Hello message sent\n");
 
   // Read
-  char *buffer2 = NULL;
-  ssize_t total_read_size = socket_recv(sock, &buffer2, 0);
-  if (total_read_size > 0) {
-    printf("Message received by client (%ld): %s\n", strlen(buffer2), buffer2);
-  }
+  // char *buffer2 = NULL;
+  // ssize_t total_read_size = socket_recv(sock, &buffer2, 0);
+  // if (total_read_size > 0) {
+  //   printf("Message received by client (%ld): %s\n", strlen(buffer2), buffer2);
+  // }
 
 	return 0;
 }

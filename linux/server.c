@@ -51,26 +51,33 @@ int main(int argc, char const *argv[]) {
     }
 
     char *buffer = NULL;
-    ssize_t total_read_size = socket_recv(new_socket, &buffer, 0);
+    char *socket_data = socket_recv(new_socket, &buffer, 0);
+    // cleanup buffer immediately
+    free(buffer);
+    buffer = NULL;
 
-    if (total_read_size == 0) {
-      DEBUG printf("total_read_size == 0, continue to next client!\n");
+    if (!socket_data || strlen(socket_data) == 0) {
+      DEBUG printf("Read 0 bytes, continue to next client!\n");
       continue;
     }
 
-    int totalLength = strlen(hello) + strlen(buffer) + 1;
-    DEBUG printf("Total allocated size: %d\n", totalLength);
-    DEBUG printf("Allocated size is strlen(hello) = %lu; strlen(buffer) = %lu; and 1\n", strlen(hello), strlen(buffer));
-    char *new_message = (char *) malloc(totalLength * sizeof(char));
+    ssize_t totalLength = strlen(hello) + strlen(socket_data);
+    DEBUG printf("Total allocated size: %zd\n", totalLength);
+    DEBUG printf(
+      "Allocated size is strlen(hello) = %lu; strlen(buffer) = %lu;. Total = %zd\n",
+      strlen(hello),
+      strlen(socket_data),
+      totalLength
+    );
+    char *new_message = (char *) malloc(totalLength);
     strcat(new_message, hello);
-    strcat(new_message, buffer);
+    strcat(new_message, socket_data);
     socket_send(new_socket, new_message, strlen(new_message), 0);
     printf("Message sent to client (%ld): %s\n", strlen(new_message), new_message);
 
-    // cleanup buffer
-    free(buffer);
-    buffer = NULL;
-    free(new_message);
+    // cleanup data
+    free(socket_data);
+    // free(new_message);
   }
 	return 0;
 }
