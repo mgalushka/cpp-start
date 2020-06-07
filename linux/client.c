@@ -44,8 +44,6 @@ int main(int argc, char const *argv[]) {
 		return -1;
 	}
 
-  free(host);
-
 	if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
 		printf("\nConnection Failed \n");
 		return -1;
@@ -55,11 +53,15 @@ int main(int argc, char const *argv[]) {
 	printf("Hello message sent\n");
 
   // Read
-  // char *buffer2 = NULL;
-  // ssize_t total_read_size = socket_recv(sock, &buffer2, 0);
-  // if (total_read_size > 0) {
-  //   printf("Message received by client (%ld): %s\n", strlen(buffer2), buffer2);
-  // }
+  char *buffer2 = NULL;
+  char *socket_data = socket_recv(sock, &buffer2, 0);
+  free(buffer2);
+  if (socket_data && strlen(socket_data) > 0) {
+    printf("Message received by client (%ld): %s\n", strlen(socket_data), socket_data);
+  }
+
+  free(socket_data);
+  free(host);
 
 	return 0;
 }
